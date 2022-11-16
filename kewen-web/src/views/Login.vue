@@ -3,17 +3,17 @@
         <el-form ref="loginForm" :rules="rules" :model="loginForm" class="loginContainer" >
             <el-avatar src="../assets/logo.png" fit="contain" id="loginLogo"></el-avatar>
             <h3 class="loginTitle" >用户登录</h3>
-            <el-form-item label="学号" prop="userno">
+            <el-form-item label="学号" prop="userno" label-width="80px">
                 <el-input type="text" placeholder="请输入学号" v-model="loginForm.userno" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password">
+            <el-form-item label="密码" prop="password" label-width="80px">
                 <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" auto-complete="false"></el-input>
             </el-form-item>
             <el-form-item  prop="code">
                 <el-input type="text" placeholder="请输入验证码" size="normal" v-model="loginForm.code" auto-complete="false" id="codeipt"></el-input>
                 <img src="" alt="">
             </el-form-item>
-            <a href="./register.vue" id="registerLink">立即注册</a>
+            <a href="" id="registerLink" @click="registerLink">立即注册</a>
             <el-form-item>
                
                 <el-button type="primary" class="login-btn" @click="submitLogin">登录</el-button>
@@ -71,12 +71,20 @@ export default {
             return false;
           }
         })
+        },
+      registerLink() {
+          this.$router.push('/register');//可以跳转会上一页
       }
     }
   }
 </script>
 
 <style>
+div{
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC",
+    "Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,
+    sans-serif;
+}
 .loginContainer {
     border-radius: 15px;
     background-clip: padding-box;
