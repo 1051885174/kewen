@@ -1,5 +1,6 @@
 #### 项目结构
 
+```
 │  App.vue
 │  main.js
 │  readme.txt  ---项目结构输出文档
@@ -18,3 +19,5 @@
         Home.vue  --主界面（生活印记）
         Login.vue ---登录
         register.vue ---注册
+```
+
