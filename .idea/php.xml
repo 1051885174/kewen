@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/kewen/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/kewen/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/kewen/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/kewen/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-image" />
+      <path value="$PROJECT_DIR$/kewen/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-multi-app" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-orm" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-trace" />
+      <path value="$PROJECT_DIR$/kewen/vendor/league/flysystem" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-template" />
+      <path value="$PROJECT_DIR$/kewen/vendor/league/mime-type-detection" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/framework" />
+      <path value="$PROJECT_DIR$/kewen/vendor/league/flysystem-cached-adapter" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-captcha" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-helper" />
+      <path value="$PROJECT_DIR$/kewen/vendor/topthink/think-view" />
+      <path value="$PROJECT_DIR$/kewen/vendor/composer" />
+      <path value="$PROJECT_DIR$/kewen/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/kewen/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/kewen/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/kewen/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/kewen/vendor/symfony/polyfill-php72" />
+    </include_path>
+  </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
+</project>
