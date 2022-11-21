@@ -41,7 +41,7 @@ export default {
     },
     methods: {
         submitLogin() {
-            this.$router.replace('/home');
+            this.$router.replace('/doucment');
         // 登录
             this.$refs.loginForm.validate((valid) => {
                 

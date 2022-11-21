@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Login from '../views/Login.vue'
 import register from '../views/register.vue'
 import Home from '../views/Home'
+import Activity from '../views/Activity'
+import Document from '../views/doucment'
 Vue.use(VueRouter)
 
 const routes = [
@@ -20,6 +22,14 @@ const routes = [
     path: '/register',
     name: 'register',
     component:register
+  }, {
+    path: '/Activity',
+    name: 'Activity',
+    component:Activity
+  }, {
+    path: '/doucment',
+    name: 'Doucment',
+    component:Document
 }]
 
 const router = new VueRouter({
