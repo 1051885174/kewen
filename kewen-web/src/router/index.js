@@ -5,6 +5,7 @@ import register from '../views/register.vue'
 import Home from '../views/Home'
 import Activity from '../views/Activity'
 import Document from '../views/doucment'
+import person from '../views/person'
 Vue.use(VueRouter)
 
 const routes = [
@@ -30,6 +31,10 @@ const routes = [
     path: '/doucment',
     name: 'Doucment',
     component:Document
+  }, {
+    path: '/person',
+    name: 'person',
+    component:person
 }]
 
 const router = new VueRouter({
