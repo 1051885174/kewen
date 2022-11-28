@@ -24,7 +24,7 @@ const routes = [
     name: 'register',
     component:register
   }, {
-    path: '/Activity',
+    path: '/activity',
     name: 'Activity',
     component:Activity
   }, {
@@ -41,4 +41,14 @@ const router = new VueRouter({
   routes
 })
 
+/*router.beforeEach((to, from, next) => {
+  if (to.path === '/login') {
+    next()
+  }
+  const token = window.sessionStorage.getItem('token');
+  if (!token || token == '' || token == null || token == undefined) {
+    next('/login')
+  }
+  next()
+})*/
 export default router

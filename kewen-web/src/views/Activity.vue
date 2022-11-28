@@ -8,14 +8,14 @@
               </el-col>
               <el-col span="16">
                 <el-menu class="navmenu" mode="horizontal"
-                 active-text-color="#67C23A" default-active="2">
-                    <el-menu-item class="navmenu-item" index="1">
+                 active-text-color="#67C23A" default-active="2" :router="true">
+                    <el-menu-item class="navmenu-item" index="doucment">
                         部门资料
                     </el-menu-item >
-                    <el-menu-item class="navmenu-item"  index="2">
+                    <el-menu-item class="navmenu-item"  index="home">
                         生活印记
                     </el-menu-item>
-                    <el-menu-item class="navmenu-item" index="3">
+                    <el-menu-item class="navmenu-item" index="activity">
                         部门活动
                     </el-menu-item>
                 </el-menu>

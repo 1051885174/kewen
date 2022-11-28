@@ -3,19 +3,18 @@
         <el-form ref="loginForm" :rules="rules" :model="loginForm" class="loginContainer" >
             <el-avatar src="../assets/logo.png" fit="contain" id="loginLogo"></el-avatar>
             <h3 class="loginTitle" >用户登录</h3>
-            <el-form-item label="学号" prop="userno" label-width="80px">
-                <el-input type="text" placeholder="请输入学号" v-model="loginForm.userno" auto-complete="false"></el-input>
+            <el-form-item label="学号" prop="kw_stuid" label-width="80px">
+                <el-input type="text" placeholder="请输入学号" v-model="loginForm.kw_stuid" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password" label-width="80px">
-                <el-input type="password" placeholder="请输入密码" v-model="loginForm.password" auto-complete="false"></el-input>
+            <el-form-item label="密码" prop="kw_password" label-width="80px">
+                <el-input type="password" placeholder="请输入密码" v-model="loginForm.kw_password" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item  prop="code">
-                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="loginForm.code" auto-complete="false" id="codeipt"></el-input>
-                <img src="" alt="">
+            <el-form-item  prop="kw_captcha">
+                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="loginForm.kw_captcha" auto-complete="false" id="kw_captchaipt"></el-input>
+                <img :src="captchasrc" alt="无法查看" @click.stop="getCaptchaSrc()" class="captchaimg">
             </el-form-item>
             <a href="" id="registerLink" @click="registerLink">立即注册</a>
-            <el-form-item>
-               
+            <el-form-item>            
                 <el-button type="primary" class="login-btn" @click="submitLogin">登录</el-button>
             </el-form-item>
         </el-form>
@@ -25,55 +24,77 @@
 <script>
 export default {
     name: "Login",
+    created() {
+    //this.submitLogin()  
+    this.getCaptchaSrc()
+    },
     data() {
         return {
+            captchasrc:'',
             loginForm: {
-                userno: 'root',
-                password: '123456',
-                code: ''
+                kw_stuid: '202010411301',
+                kw_password: '123456',
+                kw_captcha: ''
             },
             rules: {
-                userno: [{ required: true, messgae: '请输入学号', trigger: 'bulr' }],
-                password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-                code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                kw_stuid: [{ required: true, messgae: '请输入学号', trigger: 'bulr' }],
+                kw_password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                kw_captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
             }
         }
     },
     methods: {
-        submitLogin() {
-            this.$router.replace('/person');
-        // 登录
-            this.$refs.loginForm.validate((valid) => {
-                
-          if (valid) {
-            this.loading = true;//准备调登录接口时，出现正在加载
-            //第一个参数请求后端的地址，第二个参数，传给后端的数据
-            this.postRequest('/login', this.loginForm).then(resp => {
-              this.loading = false;//登录成功后关闭
-              if (resp) {
-                // 存储用户 token 到 sessionStorage
-                const tokenStr = resp.obj.tokenHead + resp.obj.token;
-                window.sessionStorage.setItem('tokenStr', tokenStr);
-                // 跳转到首页
-                // this.$router.push('/home') // 路由跳转，可以回退到上一页
-                this.$router.replace('/home') // 路径替换，无法回退到上一页
- 
-                // 页面跳转
-                // 拿到用户要跳转的路径
-                let path = this.$route.query.redirect;
-                // 用户可能输入首页地址或错误地址，让他跳到首页，否则跳转到他输入的地址
-                this.$router.replace((path === '/' || path === undefined) ? '/home' : path)
-              }
- 
-            })
-          } else {
-            this.$message.error('请输入所有字段！');
-            return false;
-          }
-        })
+        getCaptchaSrc() {
+            const self = this;
+            this.$ajax({
+                url: 'http://47.97.63.187/Captcha/captcha',
+                method: 'get',
+            }).then(response => {
+                const data = response.data;
+                if (data.code==1) {
+                    let info = data.data;
+                    self.captchasrc = info.src;
+                    //console.log(self.captchasrc);
+    }
+  }); 
+        },
+       async submitLogin() {
+            //const user = this;
+
+            /*this.$ajax({
+                url: 'http://47.97.63.187/Login/check',
+                method: 'post',
+                data:this.loginForm
+            }).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    let userinfo = data.data;
+                    this.$msg.success(data.msg);
+                    window.sessionStorage.setItem('token', userinfo.token);
+                } else{
+                    console.log('test');
+                    this.$msg.error(data.msg);
+                }
+            })*/
+            const{data:res} =await this.$ajax.post('http://47.97.63.187/Login/check', this.loginForm);
+            //console.log(res);
+            if (res.code == 1)
+            {
+                this.$msg.success(res.msg);
+                console.log(res.data.token);
+                window.sessionStorage.setItem('token', res.data);
+                this.$router.replace('/home')
+            }else if(res.code==2){
+                //console.log(res.data);
+               this.$msg.error(res.msg);
+            }
+               
+            //var res = this.$ajax.get('http://47.97.63.187/Captcha/captcha')
+            //console.log(res)
+            //this.$router.replace('/doucment');*/
         },
       registerLink() {
-          this.$router.push('/register');//可以跳转会上一页
+          this.$router.replace('/register');//可以跳转会上一页
       }
     }
   }
@@ -111,12 +132,16 @@ div{
     display: flex;
     align-items: center;
 }
+.captchaimg{
+    width: 80px;
+    height: 50px;
+}
 .login-btn{
     width: 100%;
     height: 50px;
     margin-top: 10px;
 }
-#codeipt{
+#kw_captchaipt{
     width: 250px;
     margin-right: 5px;
 }

@@ -8,14 +8,14 @@
           </el-col>
           <el-col span="16">
             <el-menu class="navmenu" mode="horizontal"
-             active-text-color="#67C23A" default-active="2">
-                <el-menu-item class="navmenu-item" index="1" @click="doucmentRouter">
+             active-text-color="#67C23A" default-active="2" :router="true">
+                <el-menu-item class="navmenu-item" index="doucment" >
                     部门资料
                 </el-menu-item >
-                <el-menu-item class="navmenu-item"  index="2" @click="HomeRouter">
+                <el-menu-item class="navmenu-item"  index="home">
                     生活印记
                 </el-menu-item>
-                <el-menu-item class="navmenu-item" index="3" @click="ActivityRouter">
+                <el-menu-item class="navmenu-item" index="activity">
                     部门活动
                 </el-menu-item>
             </el-menu>
@@ -186,15 +186,7 @@ export default {
         }
     },
     methods: {
-        doucmentRouter() {
-            this.$router.replace('/doucment');
-        },
-        HomeRouter() {
-            this.$router.replace('/home');
-        },
-        ActivityRouter() {
-            this.$router.replace('/Activity');
-        }
+    
     }
 }
 </script>
