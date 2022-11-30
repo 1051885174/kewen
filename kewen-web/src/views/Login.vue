@@ -32,8 +32,8 @@ export default {
         return {
             captchasrc:'',
             loginForm: {
-                kw_stuid: '202010411301',
-                kw_password: '123456',
+                kw_stuid: '202010411302',
+                kw_password: '111111',
                 kw_captcha: ''
             },
             rules: {

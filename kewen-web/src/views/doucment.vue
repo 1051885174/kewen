@@ -68,6 +68,29 @@ clearable>
 </div>
 
         </div>
+        <div class="searchResult">
+            <el-table :data="tableData" class="resultTable">
+    <el-table-column prop="file_time" label="上传日期" class="tableCol">
+
+    </el-table-column>
+    <el-table-column prop="file_stu_name" label="上传人姓名" class="tableCol">
+    </el-table-column>
+    <el-table-column prop="file_stu_stuid" label="上传人学号" class="tableCol">
+    </el-table-column>
+    <el-table-column prop="file_name" label="文件名称" class="tableCol">
+  </el-table-column>
+  <el-table-column prop="file_type" label="文件类型" class="tableCol">
+</el-table-column>
+<el-table-column prop="file_id" label="文件id" class="tableCol">
+</el-table-column>
+<el-table-column label="操作" class="tableCol">
+    <template slot-scope="scope">
+        <!-- {{scope.row}} -->
+        <el-button type="primary" size="mini" @click="(scope.row.file_id)">下载</el-button>
+    </template>
+</el-table-column>
+  </el-table>
+        </div>
     </el-main>
     <el-footer class="webInfo">
         <el-row class="webInfo-header">
@@ -101,7 +124,7 @@ div{
 }
 .all{
     margin: 40px auto;
-    width: 1000px;
+    /*width: 1000px;*/
 }
 .header .el-row{
     height: 60px;
@@ -139,6 +162,14 @@ div{
     grid-template-columns: repeat(2,1fr);
     row-gap: 20px;
     column-gap: 50px;
+    align-items: center;
+    justify-items: center;
+}
+.searchInput div{
+    width: 400px;
+}
+.searchInput div input{
+    width: 350px;
 }
 .searchInput .btn{
     align-self: center;
@@ -153,6 +184,12 @@ div{
     border: 1px solid transparent;
     border-radius: 15px;
     padding: auto;
+}
+col{
+    width: 150px;
+}
+.searchResult .resultTable .tableCol{
+    width: 50px;
 }
 .webInfo{
     margin: 0 auto;
@@ -174,6 +211,7 @@ div{
 }
 </style>
 <script>
+
 export default {
     name: 'document',
     data() {
@@ -182,7 +220,16 @@ export default {
             doucmentTypeInput: '',
             contributorNameInput:'',
             contributorNbrInput:'',
-            
+            tableData: [
+                {
+                    file_time: '2020-1-23',
+                    file_stu_name: 'zcl',
+                    file_stu_stuid: '202010411301',
+                    file_name: 'hhhh.doc',
+                    file_type: '1',
+                    file_id:'1'
+                }
+            ]
         }
     },
     methods: {
