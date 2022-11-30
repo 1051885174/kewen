@@ -82,7 +82,7 @@ export default {
             {
                 this.$msg.success(res.msg);
                 console.log(res.data.token);
-                window.sessionStorage.setItem('token', res.data);
+                window.sessionStorage.setItem('token', res.data.token);
                 this.$router.replace('/home')
             }else if(res.code==2){
                 //console.log(res.data);

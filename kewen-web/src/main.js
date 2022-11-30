@@ -6,6 +6,11 @@ import ElementUI from 'element-ui'
 import { Message } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
+axios.interceptors.request.use(config => {
+  config.headers.Authorization = window.sessionStorage.getItem('token');
+  console.log(config);
+  return config;
+})
 Vue.prototype.$ajax = axios
 Vue.prototype.$msg=Message
 Vue.config.productionTip = false

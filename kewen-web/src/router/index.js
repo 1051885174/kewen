@@ -6,6 +6,7 @@ import Home from '../views/Home'
 import Activity from '../views/Activity'
 import Document from '../views/doucment'
 import person from '../views/person'
+import upload from '../views/Upload'
 Vue.use(VueRouter)
 
 const routes = [
@@ -35,6 +36,10 @@ const routes = [
     path: '/person',
     name: 'person',
     component:person
+  }, {
+    path: '/upload',
+    name: 'upload',
+    component:upload
 }]
 
 const router = new VueRouter({
