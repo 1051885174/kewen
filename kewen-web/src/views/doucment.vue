@@ -8,7 +8,7 @@
           </el-col>
           <el-col span="16">
             <el-menu class="navmenu" mode="horizontal"
-             active-text-color="#67C23A" default-active="2" :router="true">
+             active-text-color="#67C23A" default-active="doucment" :router="true">
                 <el-menu-item class="navmenu-item" index="doucment" >
                     部门资料
                 </el-menu-item >
@@ -61,10 +61,10 @@ clearable>
 
 </div>
 <div class="search-btn btn">
-    <button>搜索</button>
+    <el-button @click="getDoucment()" type="primary" round>搜索</el-button>
 </div>
 <div class="reser-btn btn">
-    <button>重置</button>
+    <el-button type="primary" round>重置</el-button>
 </div>
 
         </div>
@@ -175,16 +175,6 @@ div{
     align-self: center;
     justify-self: center;
 }
-.searchInput .btn button{
-    width: 80px;
-    height: 50px;
-    background-color: #67C23A;
-    color: #F2F6FC;
-    font-size: 32px;
-    border: 1px solid transparent;
-    border-radius: 15px;
-    padding: auto;
-}
 col{
     width: 150px;
 }
@@ -212,28 +202,68 @@ col{
 </style>
 <script>
 
+
 export default {
     name: 'document',
     data() {
         return {
             doucmentNameInput: '',
-            doucmentTypeInput: '',
+            doucmentTypeInput: '选择类型',
             contributorNameInput:'',
             contributorNbrInput:'',
-            tableData: [
-                {
-                    file_time: '2020-1-23',
-                    file_stu_name: 'zcl',
-                    file_stu_stuid: '202010411301',
-                    file_name: 'hhhh.doc',
-                    file_type: '1',
-                    file_id:'1'
-                }
-            ]
+            tableData: [ ]
         }
     },
     methods: {
-    
+        // getDoucment() {
+        //     //console.log("getDoucment");
+        //     const self = this;
+        //     this.$ajax({
+        //         url: 'http://47.97.63.187/UserSearch',
+        //         method: 'post',
+        //         data: {
+        //             file_name:this.doucmentNameInput,
+        //             file_type:this.doucmentTypeInput,
+        //             kw_name:this.contributorNameInput,
+        //             kw_stuid:this.contributorNbrInput
+        //         }
+        //     }).then(response => {
+        //         const data = response.data;
+        //         if (data.code == 1) {
+        //             console.log(data.data);
+        //             this.tableData = data.data.file_data;
+        //         }
+        //     })
+        // },
+        async getDoucment() {
+            const { data:res } = await this.$ajax({
+                url: 'http://47.97.63.187/UserSearch',
+                method: 'post',
+                data: {
+                    file_name: this.doucmentNameInput,
+                    file_type: this.doucmentTypeInput,
+                    kw_name: this.contributorNameInput,
+                    kw_stuid: this.contributorNbrInput
+                }
+            });
+            if (res.code == 1) {
+                this.$message.success(res.msg);
+                this.tableData = res.data.file_data;
+            }
+            else {
+                this.$message.error(res.msg);
+            }
+           
+            //console.log(res.data.file_data);
+        //     let result = res.data.file_data;
+        //     var arr = [];
+        //     for (let i in result) {
+        //         let o = [];
+        //         o[i] = result[i];
+        //         arr.push(o);
+        //     }
+        //     console.log(arr);
+     }
     }
 }
 </script>

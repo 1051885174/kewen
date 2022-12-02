@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token');
-  console.log(config);
+  //console.log(config);
   return config;
 })
 Vue.prototype.$ajax = axios
