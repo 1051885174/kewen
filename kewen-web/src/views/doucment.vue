@@ -36,12 +36,15 @@
 </el-input>
 </div>
 <div class="doucmentType">
-    资料类型：
-    <el-input
-placeholder="请输入内容"
-v-model="doucmentTypeInput"
-clearable>
-</el-input>
+    <span>资料类型：</span>
+    <el-select v-model="doucmentTypeInput" filterable placeholder="请选择">
+        <el-option
+          v-for="item in documentType"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
 </div>
 <div class="contributorName">
     上传人名字：
@@ -207,6 +210,39 @@ export default {
     name: 'document',
     data() {
         return {
+            documentType: [
+                {
+                    value:'选择类型',
+                    label:'选择类型'
+                },
+                {
+                    value: 'IT来袭闭幕式',
+                    label:'IT来袭闭幕式 '            
+                }, {
+                    value:'PPT制作',
+                    label:'PPT制作'
+                },
+                {
+                    value:'LOGO设计',
+                    label:'LOGO设计'
+                },
+                {
+                    value:'短视频制作',
+                    label:'短视频制作'
+                }, {
+                    value:'装机',
+                    label:'装机'
+                }, {
+                    value:'生活',
+                    label:'生活'
+                }, {
+                    value: '部门事务',
+                    label:'部门事务'
+                }, {
+                    value:'学习资料',
+                    label:'学习资料'
+                },
+            ],
             doucmentNameInput: '',
             doucmentTypeInput: '选择类型',
             contributorNameInput:'',
@@ -236,6 +272,7 @@ export default {
         //     })
         // },
         async getDoucment() {
+            console.log(this.doucmentTypeInput);
             const { data:res } = await this.$ajax({
                 url: 'http://47.97.63.187/UserSearch',
                 method: 'post',
