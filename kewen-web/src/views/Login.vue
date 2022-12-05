@@ -32,7 +32,7 @@ export default {
         return {
             captchasrc:'',
             loginForm: {
-                kw_stuid: '202010411302',
+                kw_stuid: '202010411301',
                 kw_password: '111111',
                 kw_captcha: ''
             },
@@ -93,8 +93,9 @@ export default {
             //console.log(res)
             //this.$router.replace('/doucment');*/
         },
-      registerLink() {
-          this.$router.replace('/register');//可以跳转会上一页
+        registerLink() {
+            console.log('register');
+          this.$router.push({path:'/register'});//可以跳转会上一页
       }
     }
   }

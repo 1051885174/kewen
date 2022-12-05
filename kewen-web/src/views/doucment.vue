@@ -3,8 +3,9 @@
     <el-container class="all">
         <el-header class="header">
             <el-row>
-          <el-col span="4">
-            <el-avatar id="useravater" src="../assets/logo.png"></el-avatar>
+          <el-col span="4" @click="toPerson" class="doucmentUserinfo">
+            <el-avatar id="useravater" src="../assets/logo.png" @click.stop="toPerson"></el-avatar>
+            <p id="kw_name" @click.stop="getusername()" @click="toPerson()">{{kw_name}}</p>
           </el-col>
           <el-col span="16">
             <el-menu class="navmenu" mode="horizontal"
@@ -67,7 +68,7 @@ clearable>
     <el-button @click="getDoucment()" type="primary" round>搜索</el-button>
 </div>
 <div class="reser-btn btn">
-    <el-button type="primary" round>重置</el-button>
+    <el-button type="primary" round @click.stop="resetSearch()">重置</el-button>
 </div>
 
         </div>
@@ -136,12 +137,20 @@ div{
     height:100%;
 }
 .header #useravater{
+    display: block;
     height: 40px;
     width: 40px;
-   position: relative;
-   left: 50%;
-   top: 50%;
-   transform: translateX(-50%) translateY(-50%);
+}
+.doucmentUserinfo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+    gap:80px;
+}
+#kw_name{
+   color: #67C23A;
+   font-size: 24px;
 }
 .header .navmenu{
     background-color:#F2F6FC;
@@ -208,6 +217,9 @@ col{
 
 export default {
     name: 'document',
+    created(){
+        this.getusername();
+    },
     data() {
         return {
             documentType: [
@@ -247,10 +259,29 @@ export default {
             doucmentTypeInput: '选择类型',
             contributorNameInput:'',
             contributorNbrInput:'',
-            tableData: [ ]
+            tableData: [],
+            kw_name:'fox'
         }
     },
     methods: {
+        getusername() {
+            //console.log("test");
+            this.$ajax({
+                url: 'http://47.97.63.187/User/index',
+                method: 'get'
+            }).then(reponse => {
+                const data = reponse.data;
+                //console.log(data);
+                let userinfo = data.data;
+                //console.log(userinfo.user_data.kw_name);
+                this.kw_name = userinfo.user_data.kw_name;
+                this.kw_stuid = userinfo.user_data.kw_stuid;
+                this.kw_class = userinfo.user_data.kw_class;
+                this.kw_phone = userinfo.user_data.kw_phone;
+                this.kw_message = userinfo.user_data.kw_message;
+                //console.log(this.kw_class);
+            })
+        },
         // getDoucment() {
         //     //console.log("getDoucment");
         //     const self = this;
@@ -300,7 +331,19 @@ export default {
         //         arr.push(o);
         //     }
         //     console.log(arr);
-     }
+        },
+        resetSearch() {
+            //console.log('reset');
+            this.doucmentNameInput = '';
+            this.contributorNameInput = '';
+            this.contributorNbrInput = '';
+            this.tableData = [];
+            this.$message.success('重置成功');
+        },
+        toPerson() {
+            console.log('toPerson');
+            this.$router.push('/person');
+        }
     }
 }
 </script>

@@ -3,20 +3,23 @@
         <el-form ref="registerForm" :rules="rules" :model="registerForm" class="registerContainer"  >
             <el-avatar src="../assets/logo.png" fit="contain" id="registerLogo"></el-avatar>
             <h3 class="registerTitle" >用户注册</h3>
-            <el-form-item label="用户名" prop="username" label-width="80px">
-                <el-input type="text" placeholder="请输入用户名" v-model="registerForm.username"></el-input>
+            <el-form-item label="用户名" prop="kw_name" label-width="80px">
+                <el-input type="text" placeholder="请输入用户名" v-model="registerForm.kw_name"></el-input>
             </el-form-item>
-            <el-form-item label="学号" prop="userno" label-width="80px">
-                <el-input type="text" placeholder="请输入学号" v-model="registerForm.userno" auto-complete="false"></el-input>
+            <el-form-item label="学号" prop="kw_stuid" label-width="80px">
+                <el-input type="text" placeholder="请输入学号" v-model="registerForm.kw_stuid" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="password" label-width="80px"> 
-                <el-input type="password" placeholder="请输入密码" v-model="registerForm.password" auto-complete="false"></el-input>
+            <el-form-item label="电话号码" prop="kw_phone" label-width="80px">
+                <el-input type="text" placeholder="请输入电话号码" v-model="registerForm.kw_phone" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码" prop="password" label-width="80px">
-                <el-input type="password" placeholder="请再次确认密码" v-model="registerForm.password" auto-complete="false"></el-input>
+            <el-form-item label="密码" prop="kw_password" label-width="80px"> 
+                <el-input type="password" placeholder="请输入密码" v-model="registerForm.kw_password" auto-complete="false"></el-input>
             </el-form-item>
-            <el-form-item  prop="code">
-                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="registerForm.code" auto-complete="false" id="codeipt"></el-input>
+            <el-form-item label="确认密码" prop="kw_passwordnot" label-width="80px">
+                <el-input type="password" placeholder="请再次确认密码" v-model="registerForm.kw_passwordnot" auto-complete="false"></el-input>
+            </el-form-item>
+            <el-form-item  prop="kw_puriview" label="邀请码"  label-width="80px">
+                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="registerForm.kw_purview" auto-complete="false" id="codeipt"></el-input>
                 <img src="" alt="">
             </el-form-item>
             <a href="" id="loginLink" @click="loginLink">立即登录</a>
@@ -33,41 +36,35 @@ export default {
     data() {
         return {
             registerForm: {
-                username:'fox',
-                userno: 'root',
-                password: '123456',
-                code: ''
+                kw_stuid: '202010411303',
+                kw_name:'zcl',
+                kw_password: '111111',
+                kw_passwordnot: '111111',
+                kw_phone: '18111435593',
+                kw_purview:''
             },
             rules: {
-                username: [{ required: true, messgae:'请输入用户名',trigger:'bulr'}],
-                userno: [{ required: true, messgae: '请输入学号', trigger: 'bulr' }],
-                password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-                code: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                kw_name: [{ required: true, messgae:'请输入用户名',trigger:'bulr'}],
+                kw_stuid: [{ required: true, messgae: '请输入学号', trigger: 'bulr' }],
+                kw_password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                kw_passwordnot: [{ required: true, message: '请再次输入密码', trigger: 'blur' }],
+                kw_phone: [{ required: true, message: '请输入电话号码', trigger: 'blur' }],
+                kw_purview:[{required:true,message:'请输入邀请码',trigger:'blur'}]
             }
         }
     },
     methods: {
-        submitRigister() {
-           
-        // 登录
-            this.$refs.registerForm.validate((valid) => {
-                
-                if (valid) {
-            alert("注册成功，请登录");
-            this.$router.replace('/login');
-           //将数据传给后端之后，后端返回TRUE，再提示成功，并自动跳转到登录页面
-           
-            this.loading = true;//准备调登录接口时，出现正在加载
-            //第一个参数请求后端的地址，第二个参数，传给后端的数据
-            this.postRequest('/login', this.loginForm).then(resp => {
-              this.loading = false;//登录成功后关闭
- 
-            })
-          } else {
-            this.$message.error('请输入所有字段！');
-            return false;
-          }
-        })
+      async  submitRigister() {
+            console.log('register');
+            const { data:res } = await this.$ajax.post('47.97.63.187/register', this.registerForm);
+            console.log(res);
+            if (res.code == 1) {
+                this.$message.success(res.msg);
+            }
+            if (res.code == 2) {
+                this.$message.error(res.msg);
+                this.$message.error(res.data.error);
+            }
         },
         loginLink() {
             this.$router.push('/login');
