@@ -37,7 +37,10 @@
 </el-col>
 <el-col span="12">
     <!-- 此处可以放每一届的合照 -->
-    <div class="depInfoImg"> </div>
+    <div class="depInfoImg" >
+        <img :src="togetherPhoto" alt="图片显示失败" @click.stop="getTogetherPhoto()" class="togetherPhoto">
+        <!-- <img src="http://47.97.63.187/User/together_picture_show/2022" alt="图片显示失败" @click.stop="getTogetherPhoto()" class="togetherPhoto">  -->
+    </div>
 </el-col>
 </el-row>
 <el-row class="depMbrInfo">
@@ -82,20 +85,20 @@
 <el-row class="depLifeImg">
 <el-row class="depLifeImg-header">
     <h1>生活照片</h1>
-    <el-button>更多</el-button>
+    <el-button type=" primary ">更多</el-button>
+    <el-date-picker
+    v-model="lifePhotoYear"
+    type="year"
+    placeholder="选择年"
+    value-format="yyyy"
+    @change="setYear">
+  </el-date-picker>
 </el-row>
-<el-row class="depLifeImg-main" gutter="20">
-<el-row gutter="20">
-    <el-col span="7"></el-col>
-    <el-col span="7"></el-col>
-    <el-col span="7"></el-col>
-</el-row>
-<el-row gutter="20">
-    <el-col span="7"></el-col>
-    <el-col span="7"></el-col>
-    <el-col span="7"></el-col>
-</el-row>
-</el-row>
+<div class="depLifeImg-main">
+    <div  v-for="(item,index) in lifePhotoSrc" :key="index">
+        <img :src="item.img" alt="">
+</div>
+</div>
 </el-row>
 </el-main>
 <el-footer class="webInfo">
@@ -123,14 +126,72 @@
     </div>
 </template>
 <script>
+
 export default {
     name: "Home",
+    created() {
+        //this.getTogetherPhoto();    
+    },
     data() {
         return {
             depMbrYear: '2020',
             depMbrImg:['../assets/logo-bg.png'],
-            depMbr:['zcl'],
+            depMbr: ['zcl'],
+            togetherPhoto: '',
+            lifePhotoYear: '2022',
+            lifePhotoSrc: [
+                { img: ""},
+                { img: "" },
+                { img: "" },
+                { img: "" },
+                { img: "" },
+                { img: "" }
+                
+            ]
         }
+    },
+    methods: {
+        getTogetherPhoto() {
+            const self = this;
+            this.$ajax({
+                url: 'http://47.97.63.187/User/together_picture_src',
+                method:'get'
+            }).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    self.togetherPhoto = data.data.src[0].picture_src;
+                    console.log(data.data.src[0].picture_src);
+                    // console.log(data.data.src[0].picture_src);
+                    // console.log(data.data.src[0].pic_route);
+                }
+            })
+        },
+        //选择年份展示对应的生活照片
+        setYear(val) {
+            if (val) {
+                const self = this;
+                console.log(val);
+                this.$ajax({
+                    url: 'http://47.97.63.187/picture_src',
+                    method: 'post',
+                }).then(response => {
+                    const data = response.data;
+                    if (data.code == 1) {
+                        console.log(data.data.src["6"][this.lifePhotoYear]);
+                        self.lifePhotoSrc[0].img = data.data.src["6"][this.lifePhotoYear][0].picture_src;
+                        self.lifePhotoSrc[1].img = data.data.src["6"][this.lifePhotoYear][1].picture_src;
+                        self.lifePhotoSrc[2].img = data.data.src["6"][this.lifePhotoYear][2].picture_src;
+                        self.lifePhotoSrc[3].img = data.data.src["6"][this.lifePhotoYear][3].picture_src;
+                        self.lifePhotoSrc[4].img = data.data.src["6"][this.lifePhotoYear][4].picture_src;
+                        self.lifePhotoSrc[5].img = data.data.src["6"][this.lifePhotoYear][5].picture_src;
+                    }
+                })
+            }
+            else {
+                console.log(0);
+            }
+        }
+
     }
 }
 </script>
@@ -190,11 +251,14 @@ P{
 .depInfo .el-col .depInfoImg{
     width: 320px;
     height:240px;
-    background-color:#67C23A ;
     position: relative;
     left: 50%;
     top: 50%;
     transform: translateX(-50%);
+}
+.depInfoImg .togetherPhoto{
+    width: 100%;
+    height: 100%;
 }
 .depMbrInfo{
     margin-top: 20px;
@@ -246,14 +310,19 @@ P{
     padding: 10px;
     text-align: center;
 }
-.depLifeImg-main .el-row {
+.depLifeImg-main{
     margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(2,1fr);
+    row-gap: 15px;
+    column-gap: 10px;
 }
-.depLifeImg-main .el-row .el-col{
-    height: 300px;
-    background-color:#67C23A ;
-    margin-left: 10px;}
-
+.depLifeImg-main img{
+    width: 300px;
+    height: 240px;
+    background-color: blue;
+}
 .webInfo{
     margin: 0 auto;
     margin-top: 20px;

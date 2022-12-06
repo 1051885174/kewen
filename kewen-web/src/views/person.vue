@@ -74,8 +74,19 @@
                 </el-tab-pane>
                 <el-tab-pane label="管理资料">角色管理</el-tab-pane>
                 <el-tab-pane label="生成邀请码">
-                    <el-button primary type="success" @click="leaderPurview()">生成部长邀请码</el-button>
-                    <el-button primary type="success" @click="staffPurview()">生成干事邀请码</el-button>
+                    <p>生成邀请码</p>
+                    <el-form>
+                        <el-form-item label="部长邀请码数量" v-model="purviewForm">
+                            <el-input type="text" placeholder="请输入" v-model="purviewForm.leader">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="干事邀请码数量">
+                            <el-input type="number" placeholder="请输入" v-model="purviewForm.staff"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button primary type="success" @click="purview()">生成</el-button>
+                        </el-form-item>
+                    </el-form>
                 </el-tab-pane>
                 <el-tab-pane label="上传合照">
                     <h1>上传合照</h1>
@@ -130,6 +141,10 @@ export default {
                 kw_name: 'langshi',
                 kw_password: '111111',
                kw_passwordnot:'111111' 
+            },
+            purviewForm: {
+                leader: '',
+                staff:''
             },
             tabPosition:'left',
             kw_name: 'fox',
@@ -278,6 +293,7 @@ export default {
     //             }
     //    })
     //     },
+    //修改用户信息
         async userModify() {
           const { data: res } = await this.$ajax.post('http://47.97.63.187/User/User_update', this.modifyForm);
           //console.log(res);
@@ -289,6 +305,7 @@ export default {
                 this.$message.error(res.msg+'错误原因'+res.data.error);
           }
         },
+        //修改信息部分的重置
         cancelModify() {
             this.modifyForm.kw_class = '';
             this.modifyForm.kw_name = '';
@@ -299,7 +316,22 @@ export default {
         },
         UploadPhoto() {
         this.$refs.upload.submit();
-      },
+        },
+        purview() {
+           // console.log(typeof (this.purviewForm.leader));
+            this.$ajax({
+                url: 'http://47.97.63.187/UserSearch/minister',
+                method: 'post',
+                data: {
+                    minister_id: this.purviewForm.leader
+            }
+            }).then(reponse => {
+                const data = response.data;
+                if (data.code == 1) {
+                    console.log(data);
+                }
+         })
+      }
     }
 }
 </script>
