@@ -91,18 +91,19 @@
                     :data="purviewData"
                     style="width: 100%">
                     <el-table-column
-                      prop="number"
+                      prop="code_id"
                       label="序号"
-                      width="180">
+                      width="80">
                     </el-table-column>
                     <el-table-column
-                      prop="purview"
+                      prop="invitation_code"
                       label="邀请码"
-                      width="180">
+                      width="300">
                     </el-table-column>
                     <el-table-column
-                      prop="position"
-                      label="身份">
+                      prop="identity"
+                      label="身份"
+                      width="80">
                     </el-table-column>
                   </el-table>
                 </el-tab-pane>
@@ -339,16 +340,17 @@ export default {
         purview() {
            // console.log(typeof (this.purviewForm.leader));
             this.$ajax({
-                url: 'http://47.97.63.187/User/UserSearch/minister/',
+                url: 'http://47.97.63.187/User/invitation_code',
                 method: 'post',
                 data: {
-                    minister_id: this.purviewForm.leader
+                    minister_id: this.purviewForm.leader,
+                    officer_id:this.purviewForm.staff
             }
             }).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
-                    //console.log(data.data);
-                    
+                    console.log(data.data.invitation_code);
+                    this.purviewData = data.data.invitation_code;
                 }
          })
       }
