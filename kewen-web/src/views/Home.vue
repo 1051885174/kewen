@@ -50,6 +50,8 @@
       v-model="depMbrYear"
       type="year"
       placeholder="选择年"
+      value-format="yyyy"
+      @change="setMbrYear"
       align="center">
     </el-date-picker>
 </el-row>
@@ -70,8 +72,9 @@
     </el-col>
     <el-col  span="10" class="depMbrInfo-intro" >
         <el-card>
-            <p class="depMbrName">姓名：<span>{{depMbr.name}}</span></p>
+            <p class="depMbrName">姓名：<span>{{depMbr[0].name}}</span></p>
             <p class="depMbrClass">专业班级:<span>{{depMbr.class}}</span></p>
+            <p class="depMbrPosition">身份:<span>{{depMbr.position}}</span></p>
             <p class="depMbrTel">电话:  <span>{{depMbr.tel}}</span></p>
             <p class="depMbrQQ">QQ: <span>{{depMbr.qq}} </span> </p>
             <p class="depMbrIntro">简介：<span>{{depMbr.intro}}</span></p>
@@ -136,7 +139,9 @@ export default {
         return {
             depMbrYear: '2020',
             depMbrImg:['../assets/logo-bg.png'],
-            depMbr: ['zcl'],
+            depMbr: [
+                {name:""}
+            ],
             togetherPhoto: '',
             lifePhotoYear: '2022',
             lifePhotoSrc: [
@@ -190,6 +195,22 @@ export default {
             else {
                 console.log(0);
             }
+        },
+        setMbrYear(val) {
+            const self = this;
+            console.log(val);
+            this.$ajax({
+                url: 'http://47.97.63.187/Life/User_show',
+                method: 'post',
+                data: {
+                    user_year:val
+                }
+            }).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    this.depMbr.name = data.data.kw_name;
+                }
+            })
         }
 
     }

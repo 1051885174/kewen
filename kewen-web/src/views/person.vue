@@ -87,6 +87,24 @@
                             <el-button primary type="success" @click="purview()">生成</el-button>
                         </el-form-item>
                     </el-form>
+                    <el-table
+                    :data="purviewData"
+                    style="width: 100%">
+                    <el-table-column
+                      prop="number"
+                      label="序号"
+                      width="180">
+                    </el-table-column>
+                    <el-table-column
+                      prop="purview"
+                      label="邀请码"
+                      width="180">
+                    </el-table-column>
+                    <el-table-column
+                      prop="position"
+                      label="身份">
+                    </el-table-column>
+                  </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="上传合照">
                     <h1>上传合照</h1>
@@ -152,7 +170,8 @@ export default {
             kw_class: '20计科3班',
             kw_phone: '110',
             kw_message: '',
-            kw_purview:''
+            kw_purview: '',
+            purviewData:[]
         }
     },
     methods: {
@@ -320,15 +339,16 @@ export default {
         purview() {
            // console.log(typeof (this.purviewForm.leader));
             this.$ajax({
-                url: 'http://47.97.63.187/UserSearch/minister',
+                url: 'http://47.97.63.187/User/UserSearch/minister/',
                 method: 'post',
                 data: {
                     minister_id: this.purviewForm.leader
             }
-            }).then(reponse => {
+            }).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
-                    console.log(data);
+                    //console.log(data.data);
+                    
                 }
          })
       }
