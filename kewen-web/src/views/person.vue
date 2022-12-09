@@ -109,31 +109,28 @@
                 </el-tab-pane>
                 <el-tab-pane label="上传合照">
                     <h1>上传合照</h1>
-                    <el-upload
-  class="upload-demo"
-  ref="upload"
-  action=none
-  :on-preview="handlePreview"
-  :on-remove="handleRemove"
-  :auto-upload="false">
-  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-  <el-button style="margin-left: 10px;" size="small" type="success" @click="UploadPhoto()">上传</el-button>
-  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                    <el-form >
+                        <el-form-item label="合照年份">
+                            <el-input type="text" v-model="togetherYear"></el-input>
+                        </el-form-item>
+                    </el-form>
+                 <el-upload class="upload"
+ref="upload"
+action="string"
+:file-list="fileList"	
+:auto-upload="false"	
+:http-request="uploadFile"
+:on-change="handleChange"	
+:on-preview="handlePreview"	
+:on-remove="handleRemove"
+multiple="multiple">	
+<el-button slot="trigger"
+  size="small"
+  type="primary"
+  @click="delFile">选取文件</el-button>
+  <!-- 准备一个提交按钮 -->
+<el-button type="primary" size="small" @click="onSubmit">上传</el-button>
 </el-upload>
-<el-table
-:data="tableData"
-style="width: 100%">
-<el-table-column
-  prop="date"
-  label="日期"
-  width="180">
-</el-table-column>
-<el-table-column
-  prop="name"
-  label="合照"
-  width="180">
-</el-table-column>
-</el-table>
                 </el-tab-pane>
               </el-tabs>
            </div>
@@ -172,10 +169,53 @@ export default {
             kw_phone: '110',
             kw_message: '',
             kw_purview: '',
-            purviewData:[]
+            purviewData: [],
+            fileList: [],
+            // 不支持多选
+            multiple: false,
+            formData: "",
+            togetherYear:""
         }
     },
     methods: {
+    //点击上传文件触发的额外事件,清空fileList
+    delFile () {
+            this.fileList = [];
+            console.log(this.togetherYear)
+    },
+    handleChange (file, fileList) {
+      this.fileList = fileList;
+      console.log(this.fileList);
+    },
+    //自定义上传文件
+    uploadFile (file) {
+      this.formData.append("together_picture_file", file.file);
+      // console.log(file.file, "sb2");
+    },
+    //删除文件
+    handleRemove (file, fileList) {
+      console.log(file, fileList);
+    },
+    // 点击文件
+    handlePreview (file) {
+      console.log(file);
+        },
+    //保存按钮
+        onSubmit() {
+            let formData = new FormData();
+            formData.append("together_picture_file", this.fileList[0].raw);//拿到存在fileList的文件存放到formData中
+            console.log(formData);
+            //使用键值对方式存储)
+            formData.append("together_picture_year", this.togetherYear);
+            //console.log();
+            this.$ajax.post('http://47.97.63.187/User/together_picture_upload', formData
+            ).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    this.$message.success(data.msg);
+                }
+            })
+        },
         getusername() {
             //console.log("test");
             this.$ajax({

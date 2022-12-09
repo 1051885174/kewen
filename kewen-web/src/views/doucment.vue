@@ -89,8 +89,13 @@ clearable>
 </el-table-column>
 <el-table-column label="操作" class="tableCol">
     <template slot-scope="scope">
-        <!-- {{scope.row}} -->
-        <el-button type="primary" size="mini" @click="(scope.row.file_id)">下载</el-button>
+        <!-- {{scope.row.file_id}} -->
+        <form action="http://47.97.63.187/User_Download" method="post">
+            <input type="text" name="file_id" :value="scope.row.file_id" 
+            class="file_idInput" style="display:none;">
+            <input type="submit" value="下载">
+        </form>
+        <!-- <el-button type="primary" size="mini" @click="download(scope.row.file_id)">下载</el-button> -->
     </template>
 </el-table-column>
   </el-table>
@@ -215,6 +220,8 @@ col{
 <script>
 
 
+
+
 export default {
     name: 'document',
     created(){
@@ -260,7 +267,7 @@ export default {
             contributorNameInput:'',
             contributorNbrInput:'',
             tableData: [],
-            kw_name:'fox'
+            kw_name: 'fox',
         }
     },
     methods: {
@@ -343,7 +350,7 @@ export default {
         toPerson() {
             console.log('toPerson');
             this.$router.push('/person');
-        }
+        },
     }
 }
 </script>
