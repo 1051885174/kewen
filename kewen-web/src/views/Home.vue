@@ -3,9 +3,10 @@
         <el-container class="all">
             <el-header class="header">
         <el-row>
-      <el-col span="4">
-        <el-avatar id="useravater" src="../assets/logo.png"></el-avatar>
-      </el-col>
+            <el-col span="4" class="avaterAndName">
+                <el-avatar id="useravater" src="../assets/logo.png" ></el-avatar>
+                <el-link id="kw_name" @click.stop="getusername()" href="/#/person" :underline="false">{{kw_name}}</el-link>
+              </el-col>
       <el-col span="16">
         <el-menu class="navmenu" mode="horizontal"
          active-text-color="#67C23A" default-active="2" :router="true">
@@ -21,7 +22,10 @@
         </el-menu>
     </el-col>
     <el-col span="4">
+        <!-- 上传按钮 -->
+       <router-link :to="{name:'upload'}">
         <el-button type="success" round class="upload-btn">上传</el-button>
+       </router-link>
     </el-col>
     </el-row>
 </el-header>
@@ -39,7 +43,7 @@
     <!-- 此处可以放每一届的合照 -->
     <div class="depInfoImg" >
         <img :src="togetherPhoto" alt="图片显示失败" @click.stop="getTogetherPhoto()" class="togetherPhoto">
-        <!-- <img src="http://47.97.63.187/User/together_picture_show/2022" alt="图片显示失败" @click.stop="getTogetherPhoto()" class="togetherPhoto">  -->
+        <!-- <img src="http://43.136.177.127/User/together_picture_show/2022" alt="图片显示失败" @click.stop="getTogetherPhoto()" class="togetherPhoto">  -->
     </div>
 </el-col>
 </el-row>
@@ -62,8 +66,6 @@
                 <el-carousel trigger="click" autoplay="flase">
                     <el-carousel-item v-for="item in depMbrImg" :key="item">
                         <img src='../assets/loginbg.png'   alt="" class="depMbrImg">
-                        <!-- {{item.name}}
-                        {{item.job}} -->
                     </el-carousel-item>
                 </el-carousel>
                 <p v-for="item in depMbr" :key="item" class="depMbrName"> {{item}}</p>
@@ -133,10 +135,12 @@
 export default {
     name: "Home",
     created() {
-        //this.getTogetherPhoto();    
+        this.getTogetherPhoto();   
+        this.getusername(); 
     },
     data() {
         return {
+            kw_name:'fox',
             depMbrYear: '2020',
             depMbrImg:['../assets/logo-bg.png'],
             depMbr: [
@@ -156,16 +160,20 @@ export default {
         }
     },
     methods: {
+        //获取部门简介旁边的合照
         getTogetherPhoto() {
             const self = this;
+            var nowdate = new Date();
+           const now_year = nowdate.getFullYear().toString();
+            console.log(now_year);
             this.$ajax({
-                url: 'http://47.97.63.187/User/together_picture_src',
-                method:'get'
+                url: 'http://43.136.177.127/User/together_picture_src',
+                method: 'get'
             }).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
                     self.togetherPhoto = data.data.src[0].picture_src;
-                    console.log(data.data.src[0].picture_src);
+                    //console.log(data.data);
                     // console.log(data.data.src[0].picture_src);
                     // console.log(data.data.src[0].pic_route);
                 }
@@ -177,11 +185,12 @@ export default {
                 const self = this;
                 console.log(val);
                 this.$ajax({
-                    url: 'http://47.97.63.187/picture_src',
+                    url: 'http://43.136.177.127/picture_src',
                     method: 'post',
                 }).then(response => {
                     const data = response.data;
                     if (data.code == 1) {
+                        //6是指生活类型照片
                         console.log(data.data.src["6"][this.lifePhotoYear]);
                         self.lifePhotoSrc[0].img = data.data.src["6"][this.lifePhotoYear][0].picture_src;
                         self.lifePhotoSrc[1].img = data.data.src["6"][this.lifePhotoYear][1].picture_src;
@@ -191,16 +200,18 @@ export default {
                         self.lifePhotoSrc[5].img = data.data.src["6"][this.lifePhotoYear][5].picture_src;
                     }
                 })
+                console.log(self.lifePhotoSrc[0].img);
             }
             else {
                 console.log(0);
             }
         },
+        //获取部门成员年份，显示成员信息
         setMbrYear(val) {
             const self = this;
             console.log(val);
             this.$ajax({
-                url: 'http://47.97.63.187/Life/User_show',
+                url: 'http://43.136.177.127/Life/User_show',
                 method: 'post',
                 data: {
                     user_year:val
@@ -211,7 +222,21 @@ export default {
                     this.depMbr.name = data.data.kw_name;
                 }
             })
-        }
+        },
+        //导航栏获取用户名
+        getusername() {
+            //console.log("test");
+            this.$ajax({
+                url: 'http://43.136.177.127/User/index',
+                method: 'get'
+            }).then(reponse => {
+                const data = reponse.data;
+                //console.log(data);
+                let userinfo = data.data;
+                //console.log(userinfo.user_data.kw_name);
+                this.kw_name = userinfo.user_data.kw_name;
+            })
+        },
 
     }
 }
@@ -235,14 +260,41 @@ P{
 .header .el-row .el-col{
     height:100%;
 }
+/*avaterAndName*/
+.avaterAndName{
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    height: 40px;
+    gap: 5px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
+}
+#kw_name{
+    font-size: 24px;
+    color: #67C23A;
+    cursor: pointer;
+}
+.header #useravater{
+    display: block;
+    line-height: 40px;
+}
+/*#kw_name{
+    display:inline-block;
+    position: relative;
+    left: 50%;
+    top: -42%;
+}
 .header #useravater{
     height: 40px;
     width: 40px;
    position: relative;
-   left: 50%;
+   left: 33%;
    top: 50%;
    transform: translateX(-50%) translateY(-50%);
-}
+}*/
 .header .navmenu{
     background-color:#F2F6FC;
     display: flex;
@@ -362,4 +414,5 @@ P{
     margin-top: 10px;
     color: #67C23A;
 }
+
 </style>

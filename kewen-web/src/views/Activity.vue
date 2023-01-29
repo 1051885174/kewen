@@ -3,9 +3,10 @@
         <el-container class="all">
             <el-header class="header">
                 <el-row>
-              <el-col span="4">
-                <el-avatar id="useravater" src="../assets/logo.png"></el-avatar>
-              </el-col>
+                  <el-col span="4" class="avaterAndName">
+                    <el-avatar id="useravater" src="../assets/logo.png" ></el-avatar>
+                    <el-link id="kw_name" @click.stop="getusername()" href="/#/person" :underline="false">{{kw_name}}</el-link>
+                  </el-col>
               <el-col span="16">
                 <el-menu class="navmenu" mode="horizontal"
                  active-text-color="#67C23A" default-active="2" :router="true">
@@ -21,7 +22,10 @@
                 </el-menu>
             </el-col>
             <el-col span="4">
-                <el-button type="success" round class="upload-btn">上传</el-button>
+                <!-- 上传按钮 -->
+       <router-link :to="{name:'upload'}">
+        <el-button type="success" round class="upload-btn">上传</el-button>
+       </router-link>
             </el-col>
             </el-row>
         </el-header>
@@ -165,14 +169,7 @@ P{
 .header .el-row .el-col{
   height:100%;
 }
-.header #useravater{
-  height: 40px;
-  width: 40px;
- position: relative;
- left: 50%;
- top: 50%;
- transform: translateX(-50%) translateY(-50%);
-}
+
 .header .navmenu{
   background-color:#F2F6FC;
   display: flex;
@@ -239,8 +236,12 @@ P{
 </style>
 <script>
 export default {
+  created() {
+        this.getusername(); 
+    },
     data() {
       return {
+        kw_name:'fox',
         options: [{
           value: '选项1',
           label: '2020年'
@@ -253,7 +254,21 @@ export default {
         }],
         value: ''
       }
+  },
+  methods: {
+    getusername() {
+            //console.log("test");
+            this.$ajax({
+                url: 'http://43.136.177.127/User/index',
+                method: 'get'
+            }).then(reponse => {
+                const data = reponse.data;
+                //console.log(data);
+                let userinfo = data.data;
+                //console.log(userinfo.user_data.kw_name);
+                this.kw_name = userinfo.user_data.kw_name;
+            })
+        },
     }
-    
 }
 </script>

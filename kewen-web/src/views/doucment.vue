@@ -3,10 +3,10 @@
     <el-container class="all">
         <el-header class="header">
             <el-row>
-          <el-col span="4" @click="toPerson" class="doucmentUserinfo">
-            <el-avatar id="useravater" src="../assets/logo.png" @click.stop="toPerson"></el-avatar>
-            <p id="kw_name" @click.stop="getusername()" @click="toPerson()">{{kw_name}}</p>
-          </el-col>
+                <el-col span="4" class="avaterAndName">
+                    <el-avatar id="useravater" src="../assets/logo.png" ></el-avatar>
+                    <el-link id="kw_name" @click.stop="getusername()" href="/#/person" :underline="false">{{kw_name}}</el-link>
+                  </el-col>
           <el-col span="16">
             <el-menu class="navmenu" mode="horizontal"
              active-text-color="#67C23A" default-active="doucment" :router="true">
@@ -22,7 +22,10 @@
             </el-menu>
         </el-col>
         <el-col span="4">
-            <el-button type="success" round class="upload-btn">上传</el-button>
+            <!-- 上传按钮 -->
+       <router-link :to="{name:'upload'}">
+        <el-button type="success" round class="upload-btn">上传</el-button>
+       </router-link>
         </el-col>
         </el-row>
     </el-header>
@@ -90,12 +93,7 @@ clearable>
 <el-table-column label="操作" class="tableCol">
     <template slot-scope="scope">
         <!-- {{scope.row.file_id}} -->
-        <form action="http://47.97.63.187/User_Download" method="post">
-            <input type="text" name="file_id" :value="scope.row.file_id" 
-            class="file_idInput" style="display:none;">
-            <input type="submit" value="下载">
-        </form>
-        <!-- <el-button type="primary" size="mini" @click="download(scope.row.file_id)">下载</el-button> -->
+        <el-button type="primary" size="mini" @click="download(scope.row.file_id)">下载</el-button>
     </template>
 </el-table-column>
   </el-table>
@@ -140,22 +138,6 @@ div{
 }
 .header .el-row .el-col{
     height:100%;
-}
-.header #useravater{
-    display: block;
-    height: 40px;
-    width: 40px;
-}
-.doucmentUserinfo{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-items: center;
-    gap:80px;
-}
-#kw_name{
-   color: #67C23A;
-   font-size: 24px;
 }
 .header .navmenu{
     background-color:#F2F6FC;
@@ -222,6 +204,7 @@ col{
 
 
 
+
 export default {
     name: 'document',
     created(){
@@ -268,13 +251,14 @@ export default {
             contributorNbrInput:'',
             tableData: [],
             kw_name: 'fox',
+            FileSrc:'',//文件地址
         }
     },
     methods: {
         getusername() {
             //console.log("test");
             this.$ajax({
-                url: 'http://47.97.63.187/User/index',
+                url: 'http://43.136.177.127/User/index',
                 method: 'get'
             }).then(reponse => {
                 const data = reponse.data;
@@ -293,7 +277,7 @@ export default {
         //     //console.log("getDoucment");
         //     const self = this;
         //     this.$ajax({
-        //         url: 'http://47.97.63.187/UserSearch',
+        //         url: 'http://43.136.177.127/UserSearch',
         //         method: 'post',
         //         data: {
         //             file_name:this.doucmentNameInput,
@@ -312,7 +296,7 @@ export default {
         async getDoucment() {
             console.log(this.doucmentTypeInput);
             const { data:res } = await this.$ajax({
-                url: 'http://47.97.63.187/UserSearch',
+                url: 'http://43.136.177.127/UserSearch',
                 method: 'post',
                 data: {
                     file_name: this.doucmentNameInput,
@@ -351,6 +335,37 @@ export default {
             console.log('toPerson');
             this.$router.push('/person');
         },
+    //     download(val) {
+    //         val = val.toString();
+    //         //console.log(typeof (val));
+    //         console.log(val);//文件id
+    //         let fileForm = new FormData();
+    //         fileForm.append('file_id', val);
+    //         this.$ajax.post('http://43.136.177.127//User_Download_Src_Pic', 
+    //         ).then(response => {
+    //             const data = response.data;
+    //             if (data.code == 2) {
+    //                 this.$message.error(data.msg);
+    //             }
+    //         })
+    //     }
+    
+    download(val) {
+        val = val.toString();
+        console.log(val);
+        this.$ajax({
+            url: 'http://43.136.177.127/User_Download_Src',
+            method: 'post',
+            data: {
+                file_id: val
+            }
+        }).then(response => {
+            const data = response.data;
+            this.FileSrc = data.data.file_src;
+            console.log(this.FileSrc);
+            this.$router.push({path:this.FileSrc});
+        })
     }
+ }
 }
 </script>

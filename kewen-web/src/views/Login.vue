@@ -47,7 +47,7 @@ export default {
         getCaptchaSrc() {
             const self = this;
             this.$ajax({
-                url: 'http://47.97.63.187/Captcha/captcha',
+                url: 'http://43.136.177.127/captcha',
                 method: 'get',
             }).then(response => {
                 const data = response.data;
@@ -76,7 +76,7 @@ export default {
                     this.$msg.error(data.msg);
                 }
             })*/
-            const{data:res} =await this.$ajax.post('http://47.97.63.187/Login/check', this.loginForm);
+            const{data:res} =await this.$ajax.post('http://43.136.177.127/login', this.loginForm);
             //console.log(res);
             if (res.code == 1)
             {

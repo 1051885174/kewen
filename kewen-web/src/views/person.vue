@@ -3,7 +3,7 @@
         <el-container class="all">
             <el-header class="header">
                 <el-row>
-              <el-col span="4" id="userinfo">
+              <el-col span="4" id="userinfo" class="avaterAndName">
                 <el-avatar  src="../assets/logo.png"></el-avatar>
                 <p id="kw_name" @click.stop="getusername()">{{kw_name}}</p>
               </el-col>
@@ -22,7 +22,10 @@
                 </el-menu>
             </el-col>
             <el-col span="4">
-                <el-button type="success" round class="upload-btn">上传</el-button>
+                        <!-- 上传按钮 -->
+       <router-link :to="{name:'upload'}">
+        <el-button type="success" round class="upload-btn">上传</el-button>
+       </router-link>
             </el-col>
             </el-row>
         </el-header>
@@ -108,7 +111,7 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="上传合照">
-                    <h1>上传合照</h1>
+                    <h1>首次上传合照</h1>
                     <el-form >
                         <el-form-item label="合照年份">
                             <el-input type="text" v-model="togetherYear"></el-input>
@@ -129,9 +132,35 @@ multiple="multiple">
   type="primary"
   @click="delFile">选取文件</el-button>
   <!-- 准备一个提交按钮 -->
-<el-button type="primary" size="small" @click="onSubmit">上传</el-button>
+<el-button type="primary" size="small" @click="FirstOnsubmit">上传</el-button>
+</el-upload>
+
+<!-- 合照覆盖 -->
+<h1>覆盖以往合照</h1>
+<el-form >
+    <el-form-item label="合照年份">
+        <el-input type="text" v-model="RepeattogetherYear"></el-input>
+    </el-form-item>
+</el-form>
+<el-upload class="upload"
+ref="upload"
+action="string"
+:file-list="fileList"	
+:auto-upload="false"	
+:http-request="uploadFile"
+:on-change="repeatandleChange"	
+:on-preview="handlePreview"	
+:on-remove="handleRemove"
+multiple="multiple">	
+<el-button slot="trigger"
+size="small"
+type="primary"
+@click="delFile">选取文件</el-button>
+<!-- 准备一个提交按钮 -->
+<el-button type="primary" size="small" @click="MoreOnSubmit">上传</el-button>
 </el-upload>
                 </el-tab-pane>
+                
               </el-tabs>
            </div>
             
@@ -171,10 +200,12 @@ export default {
             kw_purview: '',
             purviewData: [],
             fileList: [],
+            repeatFileList:[],
             // 不支持多选
             multiple: false,
             formData: "",
-            togetherYear:""
+            togetherYear: "",
+            RepeattogetherYear:'',
         }
     },
     methods: {
@@ -185,6 +216,10 @@ export default {
     },
     handleChange (file, fileList) {
       this.fileList = fileList;
+      console.log(this.fileList);
+        },
+        repeatandleChange (file, fileList) {
+      this.repeatFileList = fileList;
       console.log(this.fileList);
     },
     //自定义上传文件
@@ -200,26 +235,27 @@ export default {
     handlePreview (file) {
       console.log(file);
         },
-    //保存按钮
-        onSubmit() {
+    //保存按钮 上传合照
+    FirstOnsubmit() {
             let formData = new FormData();
             formData.append("together_picture_file", this.fileList[0].raw);//拿到存在fileList的文件存放到formData中
             console.log(formData);
             //使用键值对方式存储)
             formData.append("together_picture_year", this.togetherYear);
             //console.log();
-            this.$ajax.post('http://47.97.63.187/User/together_picture_upload', formData
+            this.$ajax.post('http://43.136.177.127/User/together_picture_upload', formData
             ).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
                     this.$message.success(data.msg);
+                    console.log(data.msg);
                 }
             })
         },
         getusername() {
             //console.log("test");
             this.$ajax({
-                url: 'http://47.97.63.187/User/index',
+                url: 'http://43.136.177.127/User/index',
                 method: 'get'
             }).then(reponse => {
                 const data = reponse.data;
@@ -233,6 +269,23 @@ export default {
                 this.kw_purview = userinfo.user_data.kw_purview;
                 this.kw_message = userinfo.user_data.kw_message;
                 //console.log(this.kw_class);
+            })
+        },
+        //合照覆盖
+        MoreOnSubmit() {
+            let formData = new FormData();
+            formData.append("together_picture_file", this.repeatFileList[0].raw);//拿到存在fileList的文件存放到formData中
+            console.log(formData);
+            //使用键值对方式存储)
+            formData.append("together_picture_year", this.RepeattogetherYear);
+            //console.log();
+            this.$ajax.post('http://43.136.177.127/User/together_picture_upload_two', formData
+            ).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    this.$message.success(data.msg);
+                    console.log(data.msg);
+                }
             })
         },
     //修改弹出框，同步信息到个人界面的信息显示
@@ -337,7 +390,7 @@ export default {
     //        console.log('updata:');
     //         console.log(res);
     //         this.$ajax({
-    //             url: 'http://47.97.63.187/User_update',
+    //             url: 'http://43.136.177.127/User_update',
     //             method: 'post',
     //             data: {
     //                 kw_class: res[0],
@@ -355,7 +408,7 @@ export default {
     //     },
     //修改用户信息
         async userModify() {
-          const { data: res } = await this.$ajax.post('http://47.97.63.187/User/User_update', this.modifyForm);
+          const { data: res } = await this.$ajax.post('http://43.136.177.127/User/User_update', this.modifyForm);
           //console.log(res);
             if (res.code == 1) {
                 this.$message.success(res.msg);
@@ -380,7 +433,7 @@ export default {
         purview() {
            // console.log(typeof (this.purviewForm.leader));
             this.$ajax({
-                url: 'http://47.97.63.187/User/invitation_code',
+                url: 'http://43.136.177.127/User/invitation_code',
                 method: 'post',
                 data: {
                     minister_id: this.purviewForm.leader,
