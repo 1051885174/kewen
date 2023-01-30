@@ -86,6 +86,7 @@ export default {
                 this.$router.replace('/home')
             }else if(res.code==2){
                 //console.log(res.data);
+                console.log(res.msg);
                this.$msg.error(res.msg);
             }
                

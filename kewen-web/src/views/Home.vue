@@ -63,23 +63,23 @@
     <el-col span="10" class="depMbrInfo-main-img">
         <el-card>
             <div class="depMbrChange">
-                <el-carousel trigger="click" autoplay="flase">
-                    <el-carousel-item v-for="item in depMbrImg" :key="item">
-                        <img src='../assets/loginbg.png'   alt="" class="depMbrImg">
+                <el-carousel trigger="click" :autoplay="autoplay" indicator-position="none" :initial-index="depMbrIMgIdx" @change="depMbrChange">
+                    <el-carousel-item v-for="item in yearDepMbr" :key="item">
+                        <div id="depMbrPicture"></div>
                     </el-carousel-item>
                 </el-carousel>
-                <p v-for="item in depMbr" :key="item" class="depMbrName"> {{item}}</p>
+                <p v-for="item in yearDepMbr" :key="item" class="depMbrName"> {{item.kw_name}}</p>
             </div>
         </el-card>
     </el-col>
     <el-col  span="10" class="depMbrInfo-intro" >
         <el-card>
-            <p class="depMbrName">姓名：<span>{{depMbr[0].name}}</span></p>
+            <p class="depMbrName">姓名：<span>{{depMbr.name}}</span></p>
             <p class="depMbrClass">专业班级:<span>{{depMbr.class}}</span></p>
-            <p class="depMbrPosition">身份:<span>{{depMbr.position}}</span></p>
+            <p class="depMbrPosition">身份:<span>{{depMbr.purview}}</span></p>
             <p class="depMbrTel">电话:  <span>{{depMbr.tel}}</span></p>
-            <p class="depMbrQQ">QQ: <span>{{depMbr.qq}} </span> </p>
-            <p class="depMbrIntro">简介：<span>{{depMbr.intro}}</span></p>
+            <!-- <p class="depMbrQQ">QQ: <span>{{depMbr.qq}} </span> </p> -->
+            <p class="depMbrIntro">简介：<span>{{depMbr.messgae}}</span></p>
             <div class="depMbrfooter">
                 <i class="el-icon-user"></i>
             </div>
@@ -141,10 +141,19 @@ export default {
     data() {
         return {
             kw_name:'fox',
-            depMbrYear: '2020',
-            depMbrImg:['../assets/logo-bg.png'],
+            depMbrYear: '',
+            yearDepMbr: [],
+            autoplay: false,//设置不自动切换
+            depMbrIMgIdx:0,//走马灯索引
+            //部员简介
             depMbr: [
-                {name:""}
+                { name: "" },
+                { class: "" },
+                { purview: "" },
+                { tel: "" },
+                { messgae: "" },
+                {picture:""}
+                
             ],
             togetherPhoto: '',
             lifePhotoYear: '2022',
@@ -219,9 +228,33 @@ export default {
             }).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
-                    this.depMbr.name = data.data.kw_name;
+                    self.yearDepMbr = data.data;
+                    console.log(this.yearDepMbr);
+                    console.log(data.data[0].kw_picture);
+                    var depMbrImg = document.getElementById('depMbrPicture');
+                    this.depMbr.name = this.yearDepMbr[this.depMbrIMgIdx].kw_name;
+                    this.depMbr.class = this.yearDepMbr[this.depMbrIMgIdx].kw_class;
+                    this.depMbr.purview = this.yearDepMbr[this.depMbrIMgIdx].kw_purview;
+                    this.depMbr.tel = this.yearDepMbr[this.depMbrIMgIdx].kw_phone;
+                    this.depMbr.messgae = this.yearDepMbr[this.depMbrIMgIdx].kw_message;
+                    console.log(this.yearDepMbr[this.depMbrIMgIdx].kw_picture);
+                    depMbrImg.style.background = 'red';
+                    depMbrImg.style.background = 'url(' + this.yearDepMbr[this.depMbrIMgIdx].kw_picture + ')';       
                 }
             })
+        },
+        depMbrChange(val) {
+            console.log(val);
+            this.depMbrIMgIdx = val;
+            var depMbrImg = document.getElementById('depMbrPicture');
+                    this.depMbr.name = this.yearDepMbr[this.depMbrIMgIdx].kw_name;
+                    this.depMbr.class = this.yearDepMbr[this.depMbrIMgIdx].kw_class;
+                    this.depMbr.purview = this.yearDepMbr[this.depMbrIMgIdx].kw_purview;
+                    this.depMbr.tel = this.yearDepMbr[this.depMbrIMgIdx].kw_phone;
+                    this.depMbr.messgae = this.yearDepMbr[this.depMbrIMgIdx].kw_message;
+                    console.log(this.yearDepMbr[this.depMbrIMgIdx].kw_picture);
+                    depMbrImg.style.background = 'red';
+                    depMbrImg.style.background = 'url(' + this.yearDepMbr[this.depMbrIMgIdx].kw_picture + ')';
         },
         //导航栏获取用户名
         getusername() {
@@ -349,7 +382,7 @@ P{
 .depMbrInfo .depMbrInfo-main .depMbrChange{
     height: 350px;
 }
-.depMbrInfo .depMbrInfo-main .depMbrImg{
+.depMbrInfo .depMbrInfo-main #depMbrPicture{
     width: 400px;
     height: 300px;
 }

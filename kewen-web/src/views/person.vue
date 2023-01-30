@@ -1,50 +1,77 @@
 <template>
     <div>
         <el-container class="all">
+            <!-- 头部 -->
             <el-header class="header">
                 <el-row>
-              <el-col span="4" id="userinfo" class="avaterAndName">
-                <el-avatar  src="../assets/logo.png"></el-avatar>
-                <p id="kw_name" @click.stop="getusername()">{{kw_name}}</p>
-              </el-col>
-              <el-col span="16">
-                <el-menu class="navmenu" mode="horizontal"
-                 active-text-color="#67C23A"  :router="true">
-                    <el-menu-item class="navmenu-item" index="doucment">
-                        部门资料
-                    </el-menu-item >
-                    <el-menu-item class="navmenu-item"  index="home">
-                        生活印记
-                    </el-menu-item>
-                    <el-menu-item class="navmenu-item" index="activity">
-                        部门活动
-                    </el-menu-item>
-                </el-menu>
-            </el-col>
-            <el-col span="4">
+                    <!-- 个人头像和用户名 -->
+                    <el-col span="4" id="userinfo" class="avaterAndName">
+                        <el-avatar  src="../assets/logo.png"></el-avatar>
+                        <p id="kw_name" @click.stop="getusername()">{{kw_name}}</p>
+                    </el-col>
+                    <!-- 导航栏 -->
+                    <el-col span="16">
+                        <el-menu class="navmenu" mode="horizontal" active-text-color="#67C23A"  :router="true">
+                            <el-menu-item class="navmenu-item" index="doucment">
+                                部门资料
+                            </el-menu-item >
+                            <el-menu-item class="navmenu-item"  index="home">
+                                生活印记
+                            </el-menu-item>
+                            <el-menu-item class="navmenu-item" index="activity">
+                                部门活动
+                            </el-menu-item>
+                        </el-menu>
+                    </el-col>
+                    <el-col span="4">
                         <!-- 上传按钮 -->
-       <router-link :to="{name:'upload'}">
-        <el-button type="success" round class="upload-btn">上传</el-button>
-       </router-link>
-            </el-col>
-            </el-row>
-        </el-header>
-        <el-main id="userInfoDisplay">
-           <div class="tab">
-            <el-tabs :tab-position="tabPosition" stretch=true>
-                <el-tab-pane label="用户信息">
-              <div class="personUserinfo">
-                <div class="useravatar">
-                </div>
-                <div class="userinfo" @click.stop="getusername()">
-                    <p class="username">用户名：{{kw_name}}</p>
-                    <p class="userNbr">学号：{{kw_stuid}}</p>
-                    <p class="userClass">专业班级:{{kw_class}}</p>
-                    <p class="usertel">电话:{{kw_phone}}</p>
-                    <p class="userPurview">职位:{{kw_purview}}</p>
-                    <p class="userintro">个人简介：{{kw_message}}</p>
-                </div>
-              </div>
+                        <router-link :to="{name:'upload'}">
+                            <el-button type="success" round class="upload-btn">上传</el-button>
+                        </router-link>
+                    </el-col>
+                </el-row>
+            </el-header>
+            <!-- 主界面 -->
+            <el-main id="userInfoDisplay">
+                <div class="tab">
+                    <el-tabs :tab-position="tabPosition" stretch=true>
+                        <!-- 用户信息展示 -->
+                        <el-tab-pane label="用户信息">
+                            <div class="personUserinfo">
+                                <div class="useravatar">
+                                    <!-- 个人头像展示 -->
+                                    <div id="useravatarShow" @click.stop="getAvatar()">
+
+                                    </div>
+                                    <!-- 个人头像上传 -->
+                                    <el-upload class="upload"
+                                    ref="upload"
+                                    action="string"
+                                    :file-list="avatarList"	
+                                    :auto-upload="false"	
+                                    :http-request="uploadAvatar"
+                                    :on-change="handleChangeAvatar"	
+                                    :on-preview="handlePreviewAvatar"	
+                                    :on-remove="handleRemoveAvatar"
+                                    multiple=flase>	
+                                    <el-button slot="trigger"
+                                    size="small"
+                                    type="primary"
+                                    @click="delAvatar">选取文件</el-button>
+                                    <!-- 提交按钮 -->
+                                    <el-button type="primary" size="small" @click="OnsubmitAvatar">上传</el-button>
+                                </el-upload>
+                            </div>
+                            <!-- 个人信息展示 -->
+                            <div class="userinfo" @click.stop="getusername()">
+                                <p class="username">用户名：{{kw_name}}</p>
+                                <p class="userNbr">学号：{{kw_stuid}}</p>
+                                <p class="userClass">专业班级:{{kw_class}}</p>
+                                <p class="usertel">电话:{{kw_phone}}</p>
+                                <p class="userPurview">职位:{{kw_purview}}</p>
+                                <p class="userintro">个人简介：{{kw_message}}</p>
+                            </div>
+                        </div>
                 </el-tab-pane>
                 <el-tab-pane label="信息修改">
                     <div class="ifrModify">
@@ -75,7 +102,9 @@
                         </el-form>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="管理资料">角色管理</el-tab-pane>
+                <el-tab-pane label="管理资料">
+                    
+                </el-tab-pane>
                 <el-tab-pane label="生成邀请码">
                     <p>生成邀请码</p>
                     <el-form>
@@ -111,7 +140,7 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="上传合照">
-                    <h1>首次上传合照</h1>
+                    <h1>上传合照</h1>
                     <el-form >
                         <el-form-item label="合照年份">
                             <el-input type="text" v-model="togetherYear"></el-input>
@@ -135,7 +164,7 @@ multiple="multiple">
 <el-button type="primary" size="small" @click="FirstOnsubmit">上传</el-button>
 </el-upload>
 
-<!-- 合照覆盖 -->
+<!-- 合照覆盖
 <h1>覆盖以往合照</h1>
 <el-form >
     <el-form-item label="合照年份">
@@ -156,9 +185,8 @@ multiple="multiple">
 size="small"
 type="primary"
 @click="delFile">选取文件</el-button>
-<!-- 准备一个提交按钮 -->
 <el-button type="primary" size="small" @click="MoreOnSubmit">上传</el-button>
-</el-upload>
+</el-upload> -->
                 </el-tab-pane>
                 
               </el-tabs>
@@ -171,27 +199,32 @@ type="primary"
     </div>
 </template>
 <script>
+import { Avatar } from 'element-ui';
+
 
 export default {
     name: 'person',
     created() {
         this.getusername()
+        this.getAvatar()
     },
     data() {
         return {
+            //修改个人信息
             modifyForm: {
                 kw_class: '1',
                 kw_message: '1',
                 kw_phone: '18111433593',
                 kw_name: 'langshi',
                 kw_password: '111111',
-               kw_passwordnot:'111111' 
+                kw_passwordnot: '111111' 
             },
             purviewForm: {
                 leader: '',
                 staff:''
             },
-            tabPosition:'left',
+            tabPosition: 'left',
+            //个人信息展示
             kw_name: 'fox',
             kw_stuid: '0000000',
             kw_class: '20计科3班',
@@ -200,15 +233,17 @@ export default {
             kw_purview: '',
             purviewData: [],
             fileList: [],
-            repeatFileList:[],
+            repeatFileList: [],
+            avatarList:[],//头像上传
             // 不支持多选
             multiple: false,
             formData: "",
-            togetherYear: "",
-            RepeattogetherYear:'',
+            togetherYear: "",//合照年份
+            RepeattogetherYear:'',//覆盖以往合照的年份
         }
     },
     methods: {
+        //上传合照第一次
     //点击上传文件触发的额外事件,清空fileList
     delFile () {
             this.fileList = [];
@@ -235,7 +270,7 @@ export default {
     handlePreview (file) {
       console.log(file);
         },
-    //保存按钮 上传合照
+    //保存按钮 上传合照第一次
     FirstOnsubmit() {
             let formData = new FormData();
             formData.append("together_picture_file", this.fileList[0].raw);//拿到存在fileList的文件存放到formData中
@@ -252,6 +287,61 @@ export default {
                 }
             })
         },
+        //上传头像
+        delAvatar () {
+            this.avatarList = [];
+        },
+        handleChangeAvatar(file, avatarList) {
+            this.avatarList = avatarList;
+            console.log(this.avatarList);
+        },
+    //     repeatandleChange (file, fileList) {
+    //   this.repeatFileList = fileList;
+    //   console.log(this.fileList);
+    // },
+    //自定义上传文件
+    uploadAvatar (file) {
+      this.formData.append("together_picture_file", file.file);
+      // console.log(file.file, "sb2");
+    },
+    //删除文件
+    handleRemoveAvatar (file, fileList) {
+      console.log(file, fileList);
+    },
+    // 点击文件
+    handlePreviewAvatar (file) {
+      console.log(file);
+        },
+    //保存按钮 上传头像 
+    OnsubmitAvatar() {
+            let formData = new FormData();
+            formData.append("kw_file", this.avatarList[0].raw);//拿到存在fileList的文件存放到formData中
+            console.log(formData);
+            //使用键值对方式存储)
+           // formData.append("together_picture_year", this.togetherYear);
+            //console.log();
+            this.$ajax.post('http://43.136.177.127/User/User_picture', formData
+            ).then(response => {
+                const data = response.data;
+                if (data.code == 1) {
+                    this.$message.success(data.msg);
+                    console.log(data.msg);
+                }
+            })
+        },
+        //获取头像地址
+        getAvatar() {
+            this.$ajax.get('http://43.136.177.127/User/User_Picture_Src').then(response =>
+            {
+                const data = response.data;
+                const AvatarSrc = data.data.src;
+                console.log(data.data.src);
+                var avatar = document.getElementById('useravatarShow');
+                avatar.style.background = 'url('+AvatarSrc+')';
+                //avatar.style.background = 'red';
+            })
+        },
+        //个人信息展示
         getusername() {
             //console.log("test");
             this.$ajax({
@@ -271,141 +361,6 @@ export default {
                 //console.log(this.kw_class);
             })
         },
-        //合照覆盖
-        MoreOnSubmit() {
-            let formData = new FormData();
-            formData.append("together_picture_file", this.repeatFileList[0].raw);//拿到存在fileList的文件存放到formData中
-            console.log(formData);
-            //使用键值对方式存储)
-            formData.append("together_picture_year", this.RepeattogetherYear);
-            //console.log();
-            this.$ajax.post('http://43.136.177.127/User/together_picture_upload_two', formData
-            ).then(response => {
-                const data = response.data;
-                if (data.code == 1) {
-                    this.$message.success(data.msg);
-                    console.log(data.msg);
-                }
-            })
-        },
-    //修改弹出框，同步信息到个人界面的信息显示
-    //     userUpdata() {
-    //         const h = this.$createElement;
-    //         let updataMessage = '';
-    //         let updataClass = '';
-    //         let updataPhone = '';
-    //         return new Promise(resolve=> {
-    //             this.$msgbox({
-    //       title: '修改个人信息',
-    //       message: h('form', null, [
-    //         h('p', {style:'text-align:left'}, '班级:'),
-    //           h('input', {
-    //               domProps: {
-    //                   type: 'text',
-    //                   value:updataClass,
-    //                   placeolder: '请输入班级'
-                    
-    //               },
-    //               class: {
-    //                   'classInput':true
-    //               },
-    //               on: {
-    //                   change: function (e) {
-    //                       updataClass = e.target.value;
-    //                 }
-    //             }
-    //           }),
-    //           h('p', {style:'text-align:left'}, '电话号码'),
-    //           h('input', {
-    //               domProps: {
-    //                   type: 'text',
-    //                   value:updataPhone,
-    //                   placeolder: '请输入电话号码'
-                    
-    //               },
-    //               class: {
-    //                 'phoneInput':true
-    //               },
-    //               on: {
-    //                   change: function (e) {
-    //                       updataPhone = e.target.value;
-    //                 }
-    //             }
-    //           }),
-    //           h('p', {style:'text-align:left'}, '个人简介'),
-    //           h('input', {
-    //               domProps: {
-    //                   type: 'text',
-    //                   value: updataMessage,
-    //                   placeolder: '请输入个人简介'
-    //               },
-    //               class: {
-    //                 'messageInput':true
-    //               },
-    //             on:{
-    //                 change: function (e) {
-    //                     updataMessage = e.target.value;
-    //               }  
-    //             }
-    //         })
-    //       ]),
-    //       showCancelButton: true,
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       beforeClose: (action, instance, done) => {
-    //           if (action === 'confirm') {
-    //             //   console.log(this.kw_message);
-    //             //   console.log(updataMessage);
-    //             //   this.kw_message = updataMessage;
-    //             //   console.log(this.kw_message);
-    //             //   this.kw_phone = updataPhone;
-    //               //   this.kw_class = updataClass;
-    //               resolve([updataClass, updataPhone,updataMessage]);
-    //               this.updata();
-    //               this.getusername();
-    //             instance.confirmButtonLoading = true;
-    //             instance.confirmButtonText = '修改中...';
-    //             //updata();
-    //           setTimeout(() => {
-    //               done();
-    //             setTimeout(() => {
-    //               instance.confirmButtonLoading = false;
-    //             }, 300);
-    //           }, 300);
-    //         } else {
-    //             done();
-    //         }
-    //       }
-    //     }).then(action => {
-    //       this.$message({
-    //         type: 'info',
-    //         message: 'action: ' + action
-    //       });
-    //     });
-    //         })
-    //     },
-    //     //将修改信息传入后端
-    //    async updata() {
-    //        let res = await this.userUpdata();
-    //        console.log('updata:');
-    //         console.log(res);
-    //         this.$ajax({
-    //             url: 'http://43.136.177.127/User_update',
-    //             method: 'post',
-    //             data: {
-    //                 kw_class: res[0],
-    //                 kw_phone: res[1],
-    //                 kw_message: res[2],
-    //                 kw_name:this.kw_name,
-    //                 kw_stuid:this.kw_stuid,
-    //             }
-    //         }).then(response => {
-    //             const data = response.data;
-    //             if (data.code == 1) {
-    //                 this.$message.success(data.message);
-    //             }
-    //    })
-    //     },
     //修改用户信息
         async userModify() {
           const { data: res } = await this.$ajax.post('http://43.136.177.127/User/User_update', this.modifyForm);
@@ -427,9 +382,10 @@ export default {
             this.modifyForm.kw_password = '';
             this.modifyForm.kw_passwordnot = '';
         },
-        UploadPhoto() {
-        this.$refs.upload.submit();
-        },
+        // UploadPhoto() {
+        // this.$refs.upload.submit();
+        // },
+        //生成邀请码
         purview() {
            // console.log(typeof (this.purviewForm.leader));
             this.$ajax({
@@ -462,7 +418,7 @@ export default {
     align-items: center;
     justify-items: center;
 }
-#userInfoDisplay .tab .personUserinfo .useravatar{
+#userInfoDisplay .tab .personUserinfo #useravatarShow{
     width: 200px;
     height: 200px;
     background-color:green;
