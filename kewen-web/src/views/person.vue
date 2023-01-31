@@ -103,7 +103,62 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="管理资料">
-                    
+                    <!-- 搜索框 -->
+                    <div class="searchDoc">
+                        <div class="file_nameInput">
+                           文件名称：<el-input placeholder="请输入文件名称" v-model="Searchfile_name"></el-input> 
+                        </div>
+                        <div class="file_typeInput">
+                            <span>资料类型：</span>
+                            <el-select v-model="file_typeInput" filterable placeholder="请选择">
+                                <el-option
+                                  v-for="item in fileType"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                              </el-select>
+                        </div>
+                         <div id="maybeOrmaynot">
+                            <div class="kw_nameInput">
+                                上传人姓名：<el-input placeholder="请输入上传人姓名" v-model="Searchkw_name"></el-input> 
+                             </div>
+                             <div class="kw_stuidInput">
+                                上传人学号：<el-input placeholder="请输入上传人学号" v-model="Searchkw_stuid"></el-input> 
+                             </div>
+                         </div>
+                    </div>
+                    <!-- 搜索按钮和重置按钮 -->
+                    <div class="search-btn btn">
+                        <el-button @click="getFile()" type="primary" round>搜索</el-button>
+                    </div>
+                    <div class="reser-btn btn">
+                        <el-button type="primary" round @click.stop="resetSearch()">重置</el-button>
+                    </div>
+                    <!-- 搜索结果 -->
+                    <div class="searchResult">
+                        <el-table :data="fielTableData" class="resultTable" :fit="fit" >
+                <!-- <el-table-column prop="file_time" label="上传日期" class="tableCol">
+            
+                </el-table-column> -->
+                <el-table-column prop="file_stu_name" label="上传人姓名" class="tableCol">
+                </el-table-column>
+                <el-table-column prop="file_stu_stuid" label="上传人学号" class="tableCol">
+                </el-table-column>
+                <el-table-column prop="file_name" label="文件名称" class="tableCol">
+              </el-table-column>
+              <el-table-column prop="file_type" label="文件类型" class="tableCol">
+            </el-table-column>
+            <!-- <el-table-column prop="file_id" label="文件id" class="tableCol">
+            </el-table-column> -->
+            <el-table-column label="操作" class="tableCol">
+                <template slot-scope="scope">
+                    <!-- {{scope.row.file_id}} -->
+                    <el-button type="primary" size="mini" @click="del(scope.row.file_id)">删除</el-button>
+                </template>
+            </el-table-column>
+              </el-table>
+                    </div>
                 </el-tab-pane>
                 <el-tab-pane label="生成邀请码">
                     <p>生成邀请码</p>
@@ -199,14 +254,16 @@ type="primary"
     </div>
 </template>
 <script>
-import { Avatar } from 'element-ui';
+import { del } from 'vue';
+
 
 
 export default {
     name: 'person',
     created() {
-        this.getusername()
-        this.getAvatar()
+        this.getusername()//获取用户名，用于导航栏和个人信息展示
+        // this.getAvatar()//获取个人头像
+        // this.judgeUserPurview()
     },
     data() {
         return {
@@ -239,7 +296,47 @@ export default {
             multiple: false,
             formData: "",
             togetherYear: "",//合照年份
-            RepeattogetherYear:'',//覆盖以往合照的年份
+            RepeattogetherYear: '',//覆盖以往合照的年份
+            //管理资料部分
+            fileType:[
+                {
+                    value:'选择类型',
+                    label:'选择类型'
+                },
+                {
+                    value: 'IT来袭闭幕式',
+                    label:'IT来袭闭幕式 '            
+                }, {
+                    value:'PPT制作',
+                    label:'PPT制作'
+                },
+                {
+                    value:'LOGO设计',
+                    label:'LOGO设计'
+                },
+                {
+                    value:'短视频制作',
+                    label:'短视频制作'
+                }, {
+                    value:'装机',
+                    label:'装机'
+                }, {
+                    value:'生活',
+                    label:'生活'
+                }, {
+                    value: '部门事务',
+                    label:'部门事务'
+                }, {
+                    value:'学习资料',
+                    label:'学习资料'
+                },
+            ],
+            file_typeInput: '选择类型',
+            Searchfile_name: '',
+            Searchkw_name: '',
+            Searchkw_stuid: '',
+            fielTableData: [],
+            fit:false,
         }
     },
     methods: {
@@ -344,6 +441,14 @@ export default {
         //个人信息展示
         getusername() {
             //console.log("test");
+            //判断用户权限
+            var maybeOrmaynot = document.getElementById('maybeOrmaynot');
+            console.log(this.kw_purview);
+            if (this.kw_purview == '干事') {
+                maybeOrmaynot.style.display = 'none';
+            } else {
+                maybeOrmaynot.style.display = 'block';
+            }
             this.$ajax({
                 url: 'http://43.136.177.127/User/index',
                 method: 'get'
@@ -402,13 +507,71 @@ export default {
                     this.purviewData = data.data.invitation_code;
                 }
          })
-      }
+        },
+        //根据权限获取不同的文件列表
+       async getFile() {
+           if (this.kw_purview == '部长') {
+            const { data:res } = await this.$ajax({
+                url: 'http://43.136.177.127/UserSearch',
+                method: 'post',
+                data: {
+                    file_name: this.Searchfile_name,
+                    file_type: this.file_typeInput,
+                    kw_name: this.Searchkw_name,
+                    kw_stuid: this.Searchkw_stuid,
+                }
+            });
+            if (res.code == 1) {
+                this.$message.success(res.msg);
+                this.fielTableData= res.data.file_data;
+            }
+            else {
+                this.$message.error(res.msg);
+            }
+           }
+           else if (this.kw_purview == '干事') {
+            const { data:res } = await this.$ajax({
+                url: 'http://43.136.177.127/User/Search',
+                method: 'post',
+                data: {
+                    file_name: this.Searchfile_name,
+                    file_type: this.file_typeInput,
+                    kw_name: this.kw_name,
+                    kw_stuid: this.kw_stuid,
+                }
+            });
+            if (res.code == 1) {
+                this.$message.success(res.msg);
+                this.fielTableData= res.data.file_data;
+            }
+            else {
+                this.$message.error(res.msg);
+            } 
+            }
+        },
+        del(val) {
+            console.log(val);
+            val = val.toString();
+            this.$ajax({
+            url: 'http://43.136.177.127/User_Delete',
+            method: 'post',
+            data: {
+                file_id: val
+            }
+        }).then(response => {
+            const data = response.data;
+            console.log(data);
+            if (data.code == 1) {
+                this.$message.success(data.msg);
+            }
+        })
+        }
     }
 }
 </script>
 <style>
 #userInfoDisplay{
-    width: 800px;
+    width: 1000px;
     height: 600px;
 }
 #userInfoDisplay .tab .personUserinfo{
