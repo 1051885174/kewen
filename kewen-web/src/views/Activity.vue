@@ -4,12 +4,12 @@
             <el-header class="header">
                 <el-row>
                   <el-col span="4" class="avaterAndName">
-                    <el-avatar id="useravater" src="../assets/logo.png" ></el-avatar>
-                    <el-link id="kw_name" @click.stop="getusername()" href="/#/person" :underline="false">{{kw_name}}</el-link>
+                    <el-avatar id="useravater" :src="useravatarSrc" ></el-avatar>
+                    <el-link id="kw_name" @click="toPerson" :underline="false">{{kw_name}}</el-link>
                   </el-col>
               <el-col span="16">
                 <el-menu class="navmenu" mode="horizontal"
-                 active-text-color="#67C23A" default-active="2" :router="true">
+                active-text-color="#409EFF" default-active="activity" :router="true"  background-color="transparent">
                     <el-menu-item class="navmenu-item" index="doucment">
                         部门资料
                     </el-menu-item >
@@ -30,97 +30,103 @@
             </el-row>
         </el-header>
         <el-main>
-            <el-row class="carousel-summer">
-                <!-- 固定照片数量，照片获取？ -->
-                <el-carousel :interval="4000" type="card" height="200px">
-                    <el-carousel-item v-for="item in 6" :key="item">
-                      <h3 class="medium">{{ item }}</h3>
+            <!-- <el-row class="carousel-summer">
+                固定照片数量，照片获取？
+                <el-carousel :interval="4000" type="card" height="300px">
+                    <el-carousel-item v-for="item in headerPicture" :key="item">
+                      <img :src=item alt="" class="picture">
                     </el-carousel-item>
                   </el-carousel>
-            </el-row>
+            </el-row> -->
             <el-row class="carousel-item" gutter="20">
             <el-row class="carouser-ppt">
-                <h1>PPT制作大赛</h1>
+               <div class="carouserHeader">
+                <h1 class="picTitle">PPT制作大赛</h1>
                 <!-- 选择查看不同年份的照片，从2020年开始 -->
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="pptValue" placeholder="请选择年份" class="yearSelect" @change="pptYear">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      :value="item.value"
+                      >
                     </el-option>
                   </el-select>
-                  <el-carousel :interval="5000" arrow="always">
-                    <el-carousel-item v-for="item in 4" :key="item">
-                      <h3>{{ item }}</h3>
+               </div>
+                  <el-carousel :interval="5000" arrow="always" type="card" height="300px">
+                    <el-carousel-item v-for="item in pptPicture" :key="item">
+                      <img :src=item alt="" class="picture">
                     </el-carousel-item>
                   </el-carousel>
             </el-row>
             <el-row class="carouser-logo">
-                <h1>LOGO设计大赛</h1>
+              <div class="carouserHeader">
+                <h1 class="picTitle">短视频制作大赛</h1>
                 <!-- 选择查看不同年份的照片，从2020年开始 -->
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="videoValue" placeholder="请选择年份" class="yearSelect" @change="videoYear">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
-                      :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-carousel :interval="5000" arrow="always">
-                    <el-carousel-item v-for="item in 4" :key="item">
-                      <h3>{{ item }}</h3>
+               </div>
+                  <el-carousel :interval="5000" arrow="always" type="card" height="300px">
+                    <el-carousel-item v-for="item in videoPicture" :key="item">
+                      <img :src=item alt="" class="picture">
                     </el-carousel-item>
                   </el-carousel>
             </el-row>
             <el-row class="carouser-video">
-                <h1>短视频制作大赛</h1>
+              <div class="carouserHeader">
+                <h1 class="picTitle">LOGO制作大赛</h1>
                 <!-- 选择查看不同年份的照片，从2020年开始 -->
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="logoValue" placeholder="请选择年份" class="yearSelect" @change="logoYear">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
-                      :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-carousel :interval="5000" arrow="always">
-                    <el-carousel-item v-for="item in 4" :key="item">
-                      <h3>{{ item }}</h3>
+               </div>
+                  <el-carousel :interval="5000" arrow="always" type="card" height="300px">
+                    <el-carousel-item v-for="item in logoPicture" :key="item">
+                      <img :src=item alt="" class="picture">
                     </el-carousel-item>
                   </el-carousel>
             </el-row>
             <el-row class="carouser-ceremony">
-                <h1>装机大赛</h1>
+              <div class="carouserHeader">
+                <h1 class="picTitle">装机大赛</h1>
                 <!-- 选择查看不同年份的照片，从2020年开始 -->
-                <el-select v-model="value" placeholder="请选择">
+                <el-select v-model="computerValue" placeholder="请选择年份" class="yearSelect" @change="computerYear">
                     <el-option
                       v-for="item in options"
                       :key="item.value"
-                      :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  <el-carousel :interval="5000" arrow="always">
-                    <el-carousel-item v-for="item in 4" :key="item">
-                      <h3>{{ item }}</h3>
+               </div>
+                  <el-carousel :interval="5000" arrow="always" type="card" height="300px">
+                    <el-carousel-item v-for="item in computerPicture" :key="item">
+                      <img :src=item alt="" class="picture">
                     </el-carousel-item>
                   </el-carousel>
             </el-row>
             <el-row class="carouser-ceremony">
-              <h1>IT来袭&UP风暴活动闭幕式</h1>
-              <!-- 选择查看不同年份的照片，从2020年开始 -->
-              <el-select v-model="value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-                <el-carousel :interval="5000" arrow="always">
-                  <el-carousel-item v-for="item in 4" :key="item">
-                    <h3>{{ item }}</h3>
+              <div class="carouserHeader">
+                <h1 class="picTitle">闭幕式</h1>
+                <!-- 选择查看不同年份的照片，从2020年开始 -->
+                <el-select v-model="endValue" placeholder="请选择" class="yearSelect" @change="endYear">
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+               </div>
+                <el-carousel :interval="5000" arrow="always" type="card" height="300px">
+                  <el-carousel-item v-for="item in endPicture" :key="item">
+                    <img :src=item alt="" class="picture">
                   </el-carousel-item>
                 </el-carousel>
           </el-row>
@@ -185,6 +191,21 @@ P{
   top: 50%;
   transform: translate(-50%,-50%);
 }
+.picture{
+  width: auto;  
+  height: auto;  
+  max-width: 100%;  
+  max-height: 100%;   
+}
+.carouserHeader{
+  display: flex;
+}
+.picTitle{
+  width: 200px;
+}
+.yearSelect{
+  width: 150px;
+}
 .el-carousel{
     width: 100%;
 }
@@ -236,30 +257,57 @@ P{
 </style>
 <script>
 export default {
-  created() {
-        this.getusername(); 
+  name: 'activity',
+  mounted() {
+    this.getusername(); 
+    this.getAvatar();//用户头像
+    this.getNowYear();//获取当前年份
+    this.initpicture()//默认显示2020年图片
     },
     data() {
       return {
+        useravatarSrc: '',//头像地址
+        pptValue: '',
+        videoValue: '',
+        logoValue: '',
+        computerValue: '',
+        endValue:'',
         kw_name:'fox',
-        options: [{
-          value: '选项1',
-          label: '2020年'
-        }, {
-          value: '选项2',
-          label: '2021年'
-        }, {
-          value: '选项3',
-          label: '2022年'
-        }],
-        value: ''
+        options: [],
+        value: '',
+        pptPicture: [],//存放ppt活动轮播图照片的数组
+        setPptPicture: '',
+        videoPicture: [],
+        setVideoPicture: '',
+        setLogoPicture: '',
+        setComputerPicture: '',
+        setendPicture:'',
+        logoPicture: [],
+        computerPicture:[],
+        endPicture: [],
+        headerPicture:[],
+        
       }
   },
   methods: {
+    getNowYear() {
+      var data = new Date();
+      var nowYear = data.getFullYear();
+      //console.log(nowYear);
+      for (let i = 2020; i <= nowYear; i++){
+        //this.newarr = this.arr.unshift({ 'value': '2023' });
+        //console.log(this.newarr);
+       // const j = i.toString();
+        this.options.unshift({ value: i });
+        //console.log(this.options);
+        //console.log(i);
+      }
+      //console.log(this.options);
+    },
     getusername() {
             //console.log("test");
             this.$ajax({
-                url: 'http://43.136.177.127/User/index',
+                url: 'https://www.cdukewen.top/User/index',
                 method: 'get'
             }).then(reponse => {
                 const data = reponse.data;
@@ -268,7 +316,160 @@ export default {
                 //console.log(userinfo.user_data.kw_name);
                 this.kw_name = userinfo.user_data.kw_name;
             })
-        },
+    },
+        //获取头像地址
+        getAvatar() {
+            this.$ajax.get('https://www.cdukewen.top/User/User_Picture_Src').then(response =>
+            {
+                const data = response.data;
+                this.useravatarSrc = 'https://www.cdukewen'+data.data.kw_picture_src;
+                //console.log(this.useravatarSrc);
+            })
+    },
+    //默认显示2020年的照片
+    initpicture() {
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[2][2020];
+        //console.log(data);
+        let pptPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.pptPicture.push(pptPictureSrc[i].picture_src);
+      }
+      })
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[4][2020];
+        //console.log(data);
+        let videoPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.videoPicture.push(videoPictureSrc[i].picture_src);
+      }
+      }),
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[3][2020];
+        //console.log(data);
+        let logoPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.logoPicture.push(logoPictureSrc[i].picture_src);
+      }
+      })
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[5][2020];
+        //console.log(data);
+        let computerPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.computerPicture.push(computerPictureSrc[i].picture_src);
+      }
+      })
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[1][2020];
+        //console.log(data);
+        let endPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.endPicture.push(endPictureSrc[i].picture_src);
+      }
+      })
+      //头部的那个轮播图
+      this.$ajax({
+        url: 'http://www.cdukewen.top/rotation_together_picture_show',
+        method:'get'
+      }).then(reponse => {
+        const data = reponse.data.data;
+        console.log(data);
+      })
+    },
+    pptYear(val) {
+      //console.log(val);
+      this.setPptPicture = val;
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[2][val];
+        //console.log(data);
+        let pptPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.pptPicture.push(pptPictureSrc[i].picture_src);
+      }
+      })
+      // for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+      //   this.pptPicture.push(pptPictureSrc[i].picture_src);
+      // }
+      //console.log(this.pptPicture);
+    },
+    videoYear(val) {
+      this.setVideoPicture = val;
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[4][val];
+        //console.log(data);
+        let videoPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.videoPicture.push(videoPictureSrc[i].picture_src);
+      }
+      })
+    },
+    logoYear(val) {
+      this.setLogoPicture = val;
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[3][val];
+        //console.log(data);
+        let logoPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.logoPicture.push(logoPictureSrc[i].picture_src);
+      }
+      })
+    },
+    computerYear(val) {
+      this.setComputerPicture = val;
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[5][val];
+        //console.log(data);
+        let computerPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.computerPicture.push(computerPictureSrc[i].picture_src);
+      }
+      })
+    },
+    endYear(val) {
+      this.setendPicture = val;
+      this.$ajax({
+        url: 'https://www.cdukewen.top/picture_src',
+        method:'post'
+      }).then(reponse => {
+        const data = reponse.data.data.src[1][val];
+        //console.log(data);
+        let endPictureSrc = data;
+        for (let i = 0; i < 4; i++){//限制轮播图数量为4张
+        this.endPicture.push(endPictureSrc[i].picture_src);
+      }
+      })
+    },
+    toPerson() {
+            this.$router.push('/person');
+        }
     }
 }
 </script>

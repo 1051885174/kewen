@@ -1,4 +1,5 @@
 <template>
+    <!-- 登录界面，包含用户名，密码，验证码 -->
     <div>
         <el-form ref="loginForm" :rules="rules" :model="loginForm" class="loginContainer" >
             <el-avatar src="../assets/logo.png" fit="contain" id="loginLogo"></el-avatar>
@@ -13,7 +14,8 @@
                 <el-input type="text" placeholder="请输入验证码" size="normal" v-model="loginForm.kw_captcha" auto-complete="false" id="kw_captchaipt"></el-input>
                 <img :src="captchasrc" alt="无法查看" @click.stop="getCaptchaSrc()" class="captchaimg">
             </el-form-item>
-            <a href="" id="registerLink" @click="registerLink">立即注册</a>
+            <!-- 跳转到注册界面路由 -->
+           <router-link :to="{name:'register'}" id="registerLink">立即注册</router-link>
             <el-form-item>            
                 <el-button type="primary" class="login-btn" @click="submitLogin">登录</el-button>
             </el-form-item>
@@ -23,14 +25,13 @@
 
 <script>
 export default {
-    name: "Login",
+    name: "login",
     created() {
-    //this.submitLogin()  
     this.getCaptchaSrc()
     },
     data() {
         return {
-            captchasrc:'',
+            captchasrc:'',//验证码图片地址
             loginForm: {
                 kw_stuid: '202010411301',
                 kw_password: '111111',
@@ -44,10 +45,11 @@ export default {
         }
     },
     methods: {
+        //获取验证码图片地址
         getCaptchaSrc() {
             const self = this;
             this.$ajax({
-                url: 'http://43.136.177.127/captcha',
+                url: 'https://www.cdukewen.top/captcha',
                 method: 'get',
             }).then(response => {
                 const data = response.data;
@@ -55,28 +57,12 @@ export default {
                     let info = data.data;
                     self.captchasrc = info.src;
                     //console.log(self.captchasrc);
-    }
-  }); 
-        },
-       async submitLogin() {
-            //const user = this;
-
-            /*this.$ajax({
-                url: 'http://47.97.63.187/Login/check',
-                method: 'post',
-                data:this.loginForm
-            }).then(response => {
-                const data = response.data;
-                if (data.code == 1) {
-                    let userinfo = data.data;
-                    this.$msg.success(data.msg);
-                    window.sessionStorage.setItem('token', userinfo.token);
-                } else{
-                    console.log('test');
-                    this.$msg.error(data.msg);
                 }
-            })*/
-            const{data:res} =await this.$ajax.post('http://43.136.177.127/login', this.loginForm);
+            });
+        },
+        //登录按钮
+       async submitLogin() {
+            const{data:res} =await this.$ajax.post('https://www.cdukewen.top/login', this.loginForm);
             //console.log(res);
             if (res.code == 1)
             {
@@ -89,15 +75,7 @@ export default {
                 console.log(res.msg);
                this.$msg.error(res.msg);
             }
-               
-            //var res = this.$ajax.get('http://47.97.63.187/Captcha/captcha')
-            //console.log(res)
-            //this.$router.replace('/doucment');*/
         },
-        registerLink() {
-            console.log('register');
-          this.$router.push({path:'/register'});//可以跳转会上一页
-      }
     }
   }
 </script>

@@ -20,12 +20,12 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 router.beforeEach((to, from, next) => {
-  if (to.path === '/login') {
+  if (to.path === '/register') {
     next()
   }
   const token = window.sessionStorage.getItem('token');
   if (!token || token == '' || token == null || token == undefined) {
-    next('/login')
+    next('/register')
   }
   next()
 })

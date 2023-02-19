@@ -1,4 +1,5 @@
 <template>
+    <!-- 注册界面 -->
     <div>
         <el-form ref="registerForm" :rules="rules" :model="registerForm" class="registerContainer"  >
             <el-avatar src="../assets/logo.png" fit="contain" id="registerLogo"></el-avatar>
@@ -19,8 +20,8 @@
                 <el-input type="password" placeholder="请再次确认密码" v-model="registerForm.kw_passwordnot" auto-complete="false"></el-input>
             </el-form-item>
             <el-form-item  prop="kw_puriview" label="邀请码"  label-width="80px">
-                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="registerForm.kw_purview" auto-complete="false" id="codeipt"></el-input>
-                <img src="" alt="">
+                <el-input type="text" placeholder="请输入验证码" size="normal" v-model="registerForm.kw_purview" auto-complete="false"></el-input>
+                <!-- <img :src="registerCaptchasrc" alt="无法查看" @click.stop="getRegisterCaptchaSrc()" class="captchaimg"> -->
             </el-form-item>
             <a href="" id="loginLink" @click="loginLink">立即登录</a>
             <el-form-item>
@@ -33,8 +34,11 @@
 <script>
 export default {
     name: "register",
+    created() {
+    },
     data() {
         return {
+            registerCaptchasrc:'',//验证码图片地址
             registerForm: {
                 kw_stuid: '202010411303',
                 kw_name:'zcl',
@@ -54,9 +58,10 @@ export default {
         }
     },
     methods: {
+    //注册按钮
       async  submitRigister() {
             console.log('register');
-            const { data:res } = await this.$ajax.post('47.97.63.187/register', this.registerForm);
+            const { data:res } = await this.$ajax.post('https://www.cdukewen.top/register', this.registerForm);
             console.log(res);
             if (res.code == 1) {
                 this.$message.success(res.msg);
@@ -66,8 +71,9 @@ export default {
                 this.$message.error(res.data.error);
             }
         },
+        //跳转到登录界面
         loginLink() {
-            this.$router.push('/login');
+            this.$router.push('/');
       }
     }
   }
@@ -111,7 +117,7 @@ div{
     margin-top: 10px;
 }
 #codeipt{
-    width: 250px;
+    width: 180px;
     margin-right: 5px;
 }
 #loginLink{

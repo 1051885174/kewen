@@ -4,12 +4,12 @@
         <el-header class="header">
             <el-row>
                 <el-col span="4" class="avaterAndName">
-                    <el-avatar id="useravater" src="../assets/logo.png" ></el-avatar>
-                    <el-link id="kw_name" @click.stop="getusername()" href="/#/person" :underline="false">{{kw_name}}</el-link>
+                    <el-avatar id="useravater" :src="useravatarSrc" ></el-avatar>
+                    <el-link id="kw_name" @click="toPerson" :underline="false">{{kw_name}}</el-link>
                   </el-col>
           <el-col span="16">
             <el-menu class="navmenu" mode="horizontal"
-             active-text-color="#67C23A" default-active="doucment" :router="true">
+             active-text-color="#409EFF" default-active="doucment" :router="true"  background-color="transparent">
                 <el-menu-item class="navmenu-item" index="doucment" >
                     部门资料
                 </el-menu-item >
@@ -86,7 +86,7 @@ clearable>
     </el-table-column>
     <el-table-column prop="file_name" label="文件名称" class="tableCol">
   </el-table-column>
-  <el-table-column prop="file_type" label="文件类型" class="tableCol">
+  <el-table-column prop="file_type" label="文件类型" class="tableCol" id="fiel_typeCol">
 </el-table-column>
 <el-table-column prop="file_id" label="文件id" class="tableCol">
 </el-table-column>
@@ -174,8 +174,11 @@ div{
     align-self: center;
     justify-self: center;
 }
+.tableCol{
+    width: 50px;
+}
 col{
-    width: 150px;
+    width: 140px;
 }
 .searchResult .resultTable .tableCol{
     width: 50px;
@@ -209,9 +212,12 @@ export default {
     name: 'document',
     created(){
         this.getusername();
+        this.getAvatar();//用户头像
+        
     },
     data() {
         return {
+            useravatarSrc:'',//头像地址
             documentType: [
                 {
                     value:'选择类型',
@@ -258,7 +264,7 @@ export default {
         getusername() {
             //console.log("test");
             this.$ajax({
-                url: 'http://43.136.177.127/User/index',
+                url: 'https://www.cdukewen.top/User/index',
                 method: 'get'
             }).then(reponse => {
                 const data = reponse.data;
@@ -273,11 +279,20 @@ export default {
                 //console.log(this.kw_class);
             })
         },
+        //获取头像地址
+        getAvatar() {
+            this.$ajax.get('https://www.cdukewen.top/User/User_Picture_Src').then(response =>
+            {
+                const data = response.data;
+                this.useravatarSrc = 'https://www.cdukewen.top'+data.data.kw_picture_src;
+                console.log(this.useravatarSrc);
+            })
+        },
         // getDoucment() {
         //     //console.log("getDoucment");
         //     const self = this;
         //     this.$ajax({
-        //         url: 'http://43.136.177.127/UserSearch',
+        //         url: 'https://www.cdukewen.top/UserSearch',
         //         method: 'post',
         //         data: {
         //             file_name:this.doucmentNameInput,
@@ -296,7 +311,7 @@ export default {
         async getDoucment() {
             console.log(this.doucmentTypeInput);
             const { data:res } = await this.$ajax({
-                url: 'http://43.136.177.127/UserSearch',
+                url: 'https://www.cdukewen.top/UserSearch',
                 method: 'post',
                 data: {
                     file_name: this.doucmentNameInput,
@@ -341,7 +356,7 @@ export default {
     //         console.log(val);//文件id
     //         let fileForm = new FormData();
     //         fileForm.append('file_id', val);
-    //         this.$ajax.post('http://43.136.177.127//User_Download_Src_Pic', 
+    //         this.$ajax.post('https://www.cdukewen.top//User_Download_Src_Pic', 
     //         ).then(response => {
     //             const data = response.data;
     //             if (data.code == 2) {
@@ -354,7 +369,7 @@ export default {
         val = val.toString();
         console.log(val);
         this.$ajax({
-            url: 'http://43.136.177.127/User_Download_Src',
+            url: 'https://www.cdukewen.top/User_Download_Src',
             method: 'post',
             data: {
                 file_id: val
@@ -365,7 +380,10 @@ export default {
             console.log(this.FileSrc);
             this.$router.push({path:this.FileSrc});
         })
-    }
+        },
+        toPerson() {
+            this.$router.push('/person');
+        }
  }
 }
 </script>

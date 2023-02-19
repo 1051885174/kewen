@@ -6,12 +6,12 @@
                 <el-row>
                     <!-- 个人头像和用户名 -->
                     <el-col span="4" id="userinfo" class="avaterAndName">
-                        <el-avatar  src="../assets/logo.png"></el-avatar>
+                        <el-avatar id="useravater" :src="useravatarSrc" ></el-avatar>
                         <p id="kw_name" @click.stop="getusername()">{{kw_name}}</p>
                     </el-col>
                     <!-- 导航栏 -->
                     <el-col span="16">
-                        <el-menu class="navmenu" mode="horizontal" active-text-color="#67C23A"  :router="true">
+                        <el-menu class="navmenu" mode="horizontal" active-text-color="#67C23A"  :router="true"   background-color="transparent">
                             <el-menu-item class="navmenu-item" index="doucment">
                                 部门资料
                             </el-menu-item >
@@ -57,9 +57,9 @@
                                     <el-button slot="trigger"
                                     size="small"
                                     type="primary"
-                                    @click="delAvatar">选取文件</el-button>
+                                    @click="delAvatar" class="selectBtn">选取文件</el-button>
                                     <!-- 提交按钮 -->
-                                    <el-button type="primary" size="small" @click="OnsubmitAvatar">上传</el-button>
+                                    <el-button type="primary" size="small" @click="OnsubmitAvatar" class="uploadBtn">上传</el-button>
                                 </el-upload>
                             </div>
                             <!-- 个人信息展示 -->
@@ -103,7 +103,8 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="管理资料">
-                    <!-- 搜索框 -->
+                    <div class="manageDoc">
+                        <!-- 搜索框 -->
                     <div class="searchDoc">
                         <div class="file_nameInput">
                            文件名称：<el-input placeholder="请输入文件名称" v-model="Searchfile_name"></el-input> 
@@ -119,22 +120,25 @@
                                 </el-option>
                               </el-select>
                         </div>
-                         <div id="maybeOrmaynot">
-                            <div class="kw_nameInput">
-                                上传人姓名：<el-input placeholder="请输入上传人姓名" v-model="Searchkw_name"></el-input> 
-                             </div>
-                             <div class="kw_stuidInput">
-                                上传人学号：<el-input placeholder="请输入上传人学号" v-model="Searchkw_stuid"></el-input> 
-                             </div>
-                         </div>
+                     
                     </div>
+                    <div id="maybeOrmaynot">
+                        <div class="kw_nameInput">
+                            上传人姓名：<el-input placeholder="请输入上传人姓名" v-model="Searchkw_name"></el-input> 
+                         </div>
+                         <div class="kw_stuidInput">
+                            上传人学号：<el-input placeholder="请输入上传人学号" v-model="Searchkw_stuid"></el-input> 
+                         </div>
+                     </div>
                     <!-- 搜索按钮和重置按钮 -->
+                   <div class="personBtn">
                     <div class="search-btn btn">
                         <el-button @click="getFile()" type="primary" round>搜索</el-button>
                     </div>
                     <div class="reser-btn btn">
                         <el-button type="primary" round @click.stop="resetSearch()">重置</el-button>
                     </div>
+                   </div>
                     <!-- 搜索结果 -->
                     <div class="searchResult">
                         <el-table :data="fielTableData" class="resultTable" :fit="fit" >
@@ -159,9 +163,10 @@
             </el-table-column>
               </el-table>
                     </div>
+                    </div>
                 </el-tab-pane>
                 <el-tab-pane label="生成邀请码">
-                    <p>生成邀请码</p>
+                    <!-- <h3>生成邀请码</h3> -->
                     <el-form>
                         <el-form-item label="部长邀请码数量" v-model="purviewForm">
                             <el-input type="text" placeholder="请输入" v-model="purviewForm.leader">
@@ -214,9 +219,9 @@ multiple="multiple">
 <el-button slot="trigger"
   size="small"
   type="primary"
-  @click="delFile">选取文件</el-button>
+  @click="delFile" class="selectBtn">选取文件</el-button>
   <!-- 准备一个提交按钮 -->
-<el-button type="primary" size="small" @click="FirstOnsubmit">上传</el-button>
+<el-button type="primary" size="small" @click="FirstOnsubmit" class="uploadBtn">上传</el-button>
 </el-upload>
 
 <!-- 合照覆盖
@@ -260,13 +265,25 @@ import { del } from 'vue';
 
 export default {
     name: 'person',
-    created() {
-        this.getusername()//获取用户名，用于导航栏和个人信息展示
-        // this.getAvatar()//获取个人头像
-        // this.judgeUserPurview()
+    watch:{
+      $route(){
+        //跳转到该页面后需要进行的操作
+        this.getusername();//获取用户名，用于导航栏和个人信息展示
+        this.getAvatar();//获取个人头像
+      }
     },
+    mounted() {
+        this.getusername();//获取用户名，用于导航栏和个人信息展示
+        this.getAvatar();//获取个人头像  
+    },
+    // created() {
+    //     this.getusername();//获取用户名，用于导航栏和个人信息展示
+    //     this.getAvatar();//获取个人头像
+    //     // this.judgeUserPurview()
+    // },
     data() {
         return {
+            useravatarSrc:'',//头像地址
             //修改个人信息
             modifyForm: {
                 kw_class: '1',
@@ -375,7 +392,7 @@ export default {
             //使用键值对方式存储)
             formData.append("together_picture_year", this.togetherYear);
             //console.log();
-            this.$ajax.post('http://43.136.177.127/User/together_picture_upload', formData
+            this.$ajax.post('https://www.cdukewen.top/User/together_picture_upload', formData
             ).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
@@ -417,7 +434,7 @@ export default {
             //使用键值对方式存储)
            // formData.append("together_picture_year", this.togetherYear);
             //console.log();
-            this.$ajax.post('http://43.136.177.127/User/User_picture', formData
+            this.$ajax.post('https://www.cdukewen.top/User/User_picture', formData
             ).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
@@ -428,14 +445,15 @@ export default {
         },
         //获取头像地址
         getAvatar() {
-            this.$ajax.get('http://43.136.177.127/User/User_Picture_Src').then(response =>
+            this.$ajax.get('https://www.cdukewen.top/User/User_Picture_Src').then(response =>
             {
                 const data = response.data;
-                const AvatarSrc = data.data.src;
-                console.log(data.data.src);
+                const AvatarSrc = 'https://www.cdukewen.top'+data.data.kw_picture_src;
+                console.log(AvatarSrc);
                 var avatar = document.getElementById('useravatarShow');
-                avatar.style.background = 'url('+AvatarSrc+')';
+                avatar.style.backgroundImage= 'url('+AvatarSrc+')';
                 //avatar.style.background = 'red';
+                this.useravatarSrc = AvatarSrc;
             })
         },
         //个人信息展示
@@ -443,14 +461,14 @@ export default {
             //console.log("test");
             //判断用户权限
             var maybeOrmaynot = document.getElementById('maybeOrmaynot');
-            console.log(this.kw_purview);
+           // console.log(this.kw_purview);
             if (this.kw_purview == '干事') {
                 maybeOrmaynot.style.display = 'none';
             } else {
-                maybeOrmaynot.style.display = 'block';
+                maybeOrmaynot.style.display = 'flex';
             }
             this.$ajax({
-                url: 'http://43.136.177.127/User/index',
+                url: 'https://www.cdukewen.top/User/index',
                 method: 'get'
             }).then(reponse => {
                 const data = reponse.data;
@@ -468,7 +486,7 @@ export default {
         },
     //修改用户信息
         async userModify() {
-          const { data: res } = await this.$ajax.post('http://43.136.177.127/User/User_update', this.modifyForm);
+          const { data: res } = await this.$ajax.post('https://www.cdukewen.top/User/User_update', this.modifyForm);
           //console.log(res);
             if (res.code == 1) {
                 this.$message.success(res.msg);
@@ -494,7 +512,7 @@ export default {
         purview() {
            // console.log(typeof (this.purviewForm.leader));
             this.$ajax({
-                url: 'http://43.136.177.127/User/invitation_code',
+                url: 'https://www.cdukewen.top/User/invitation_code',
                 method: 'post',
                 data: {
                     minister_id: this.purviewForm.leader,
@@ -512,7 +530,7 @@ export default {
        async getFile() {
            if (this.kw_purview == '部长') {
             const { data:res } = await this.$ajax({
-                url: 'http://43.136.177.127/UserSearch',
+                url: 'https://www.cdukewen.top/UserSearch',
                 method: 'post',
                 data: {
                     file_name: this.Searchfile_name,
@@ -531,7 +549,7 @@ export default {
            }
            else if (this.kw_purview == '干事') {
             const { data:res } = await this.$ajax({
-                url: 'http://43.136.177.127/User/Search',
+                url: 'https://www.cdukewen.top/User/Search',
                 method: 'post',
                 data: {
                     file_name: this.Searchfile_name,
@@ -553,7 +571,7 @@ export default {
             console.log(val);
             val = val.toString();
             this.$ajax({
-            url: 'http://43.136.177.127/User_Delete',
+            url: 'https://www.cdukewen.top/User_Delete',
             method: 'post',
             data: {
                 file_id: val
@@ -586,13 +604,95 @@ export default {
     height: 200px;
     background-color:green;
     border-radius: 500px;
+    background-size:cover;  
 }
 .tab .personUserinfo .userinfo p{
     text-align: start;
     padding: 5px;
+    font-size: 20px;
+    color:#67C23A;
+}
+.useravatar .upload .selectBtn{
+    margin-right: 40px;
+}
+.useravatar .upload{
+    margin-top: 10px;
+    margin-left: 10px;
 }
 .ifrModify{
     width: 300px;
+    margin-left: 30px;
+}
+.ifrModify h1{
+    text-align: center;
+}
+.ifrModify .el-button {
+margin-left: 85px;
+}
+.manageDoc{
+    width: 800px;
+    margin-left: 30px;
+}
+.searchDoc{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+    align-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    height: 80px;
+}
+.file_typeInput{
+    margin-top: 10px;
+}
+.file_nameInput{
+    width: 300px;
+}
+#maybeOrmaynot{
+    width: 800px;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 15px;
+}
+.personBtn { 
+    display: flex;
+    flex-direction: row;
+    gap: 250px;
+    margin-top: 15px;
+} 
+col{
+    width: 140px;
+}
+/*第三部分 生成邀请码*/
+#pane-3{
+    width: 800px;
+    margin-left: 30px;
+}
+#pane-3 .el-input{
+    width: 150px;
+}
+#pane-3 col{
+    width: 250px;
+}
+#pane-4{
+    width: 400px;
+    margin-left: 30px;
+}
+#pane-4 h1{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#pane-4 .upload{
+    margin-left: 120px;
+}
+.el-main .el-tabs__item {
+    font-size: 20px;
+    height: 70px;
+    color: #67C23A;
 }
 /*#userInfoDisplay{
     display: grid;

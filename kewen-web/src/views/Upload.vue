@@ -14,7 +14,7 @@
                       </el-select> -->
                       上传文件类型:  <el-select v-model="fileValue" placeholder="请选择">
                         <el-option
-                          v-for="item in smallOptions"
+                          v-for="item in fileOptions"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
@@ -36,27 +36,36 @@
                       <el-button slot="trigger"
                       size="small"
                       type="primary"
-                       @click="delFile">选取文件</el-button>
+                       @click="delFile" class="selectBtn">选取文件</el-button>
   <!-- 准备一个提交按钮 -->
-<el-button type="primary" size="small" @click="onSubmitFile">上传</el-button>
+<el-button type="primary" size="small" @click="onSubmitFile" class="uploadBtn">上传</el-button>
 </el-upload>
                 </div>
                 <div class="uploadPic">
                   上传图片类型： <el-select v-model="picValue" placeholder="请选择">
                     <el-option
-                      v-for="item in smallOptions"
+                      v-for="item in picOptions"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
                     </el-option>
                   </el-select>
-                  上传图片年份： <el-date-picker
+                  <!-- 上传图片年份： <el-date-picker
                   v-model="picYear"
                   type="year"
                   value-format="yyyy"
                   placeholder="选择年"
                   @change="setPicYear">
-                </el-date-picker>
+                </el-date-picker> -->
+                 <!-- 选择查看不同年份的照片，从2020年开始 -->
+                 <el-select v-model="picYear" placeholder="请选择年份" class="yearSelect" @change="setPicYear">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :value="item.value"
+                    >
+                  </el-option>
+                </el-select>
                 </div>
                 <div class="upload">
                   <el-upload
@@ -72,9 +81,9 @@
                     <el-button slot="trigger"
                     size="small"
                     type="primary"
-                     @click="delPic">选取文件</el-button>
+                     @click="delPic" class="selectBtn">选取文件</el-button>
 <!-- 准备一个提交按钮 -->
-<el-button type="primary" size="small" @click="onSubmitPic">上传</el-button>
+<el-button type="primary" size="small" @click="onSubmitPic" class="uploadBtn">上传</el-button>
 </el-upload>
               </div>
             </el-main>
@@ -83,6 +92,9 @@
 </template>
 <script>
 export default {
+  created() {
+    this.getNowYear(); 
+  },
     data() {
       return {
         options: [{
@@ -92,10 +104,10 @@ export default {
           value: '1',
           label: '图片'
         }],
-        fileValue: '',
-        picValue: '',
+        fileValue: '选择类型',
+        picValue: '选择类型',
         picYear:'',
-        smallOptions: [
+        fileOptions: [
           {
           value: 'IT来袭闭幕式',
           label: 'IT来袭闭幕式'
@@ -141,6 +153,47 @@ export default {
           label:'合照'
         }
         ],
+        picOptions:[
+          {
+          value: 'IT来袭闭幕式',
+          label: 'IT来袭闭幕式'
+        }, {
+          value: 'PPT制作',
+          label: 'PPT制作'
+          }
+          , {
+          value: 'LOGO设计',
+          label: 'LOGO设计'
+          },
+          {
+            value: '短视频制作',
+          label:'短视频制作'
+        },
+          {
+            value: '装机',
+          label:'装机'
+          }
+          ,
+          {
+            value: '生活',
+          label:'生活'
+          }
+          ,
+          {
+            value: '部门事务',
+          label:'部门事务'
+          }
+          ,
+          {
+            value: '学习资料',
+          label:'学习资料'
+          }
+          ,
+          {
+            value: '选择类型',
+          label:'选择类型'
+          }
+        ],
         //上传部分
         fileList: [],//文件列表
         picList:[],//图片列表
@@ -149,12 +202,28 @@ export default {
         formData: "",
         formDataPic:"",
         file_type: "",
-        picture_type:"",
+        picture_type: "",
+        options: [],
+        
       }
   },
   methods: {
     // 上传文件部分
        //点击上传文件触发的额外事件,清空fileList
+       getNowYear() {
+      var data = new Date();
+      var nowYear = data.getFullYear();
+      //console.log(nowYear);
+      for (let i = 2020; i <= nowYear; i++){
+        //this.newarr = this.arr.unshift({ 'value': '2023' });
+        //console.log(this.newarr);
+       // const j = i.toString();
+        this.options.unshift({ value: i });
+        //console.log(this.options);
+        //console.log(i);
+      }
+      //console.log(this.options);
+    },
     delFile () {
             this.fileList = [];
             console.log(this.file_type)
@@ -189,7 +258,7 @@ export default {
             //使用键值对方式存储)
             formData.append("file_type", this.file_type);
             //console.log();
-            this.$ajax.post('http://43.136.177.127/User_Upload', formData
+            this.$ajax.post('https://www.cdukewen.top/User_Upload', formData
             ).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
@@ -240,7 +309,7 @@ export default {
           formDataPic.append("picture_type", this.picture_type);
           formDataPic.append("picture_year", this.picYear);
             //console.log();
-            this.$ajax.post('http://43.136.177.127/picture_upload', formDataPic
+            this.$ajax.post('https://www.cdukewen.top/picture_upload', formDataPic
             ).then(response => {
                 const data = response.data;
                 if (data.code == 1) {
@@ -276,5 +345,22 @@ P{
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+/*.upload{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}*/
+.upload .selectBtn{
+  display: block;
+  margin-right: 10px;
+}
+/*.upload .uploadBtn{
+  display: block;
+  margin-left: 10px;
+}*/
+.uploadPic .yearSelect{ 
+  display: inline-block;
+  margin-left: 10px;
 }
 </style>

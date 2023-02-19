@@ -12,12 +12,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Login',
+    name: 'login',
     component: Login
   },
   {
     path: '/home',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
@@ -26,11 +26,11 @@ const routes = [
     component:register
   }, {
     path: '/activity',
-    name: 'Activity',
+    name: 'activity',
     component:Activity
   }, {
     path: '/doucment',
-    name: 'Doucment',
+    name: 'doucment',
     component:Document
   }, {
     path: '/person',
@@ -43,6 +43,7 @@ const routes = [
 }]
 
 const router = new VueRouter({
+  mode:'hash',
   routes
 })
 
