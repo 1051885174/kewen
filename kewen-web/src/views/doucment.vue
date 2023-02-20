@@ -378,7 +378,9 @@ export default {
             const data = response.data;
             this.FileSrc = data.data.file_src;
             console.log(this.FileSrc);
-            this.$router.push({path:this.FileSrc});
+            const src='https://www.cdukewen.top'+this.FileSrc;
+            // this.$router.push({path:this.FileSrc});
+            window.open(src, '_blank')
         })
         },
         toPerson() {

@@ -322,7 +322,7 @@ export default {
             this.$ajax.get('https://www.cdukewen.top/User/User_Picture_Src').then(response =>
             {
                 const data = response.data;
-                this.useravatarSrc = 'https://www.cdukewen'+data.data.kw_picture_src;
+                this.useravatarSrc = 'https://www.cdukewen.top'+data.data.kw_picture_src;
                 //console.log(this.useravatarSrc);
             })
     },

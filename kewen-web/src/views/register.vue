@@ -40,11 +40,11 @@ export default {
         return {
             registerCaptchasrc:'',//验证码图片地址
             registerForm: {
-                kw_stuid: '202010411303',
-                kw_name:'zcl',
-                kw_password: '111111',
-                kw_passwordnot: '111111',
-                kw_phone: '18111435593',
+                kw_stuid: '',
+                kw_name:'',
+                kw_password: '',
+                kw_passwordnot: '',
+                kw_phone: '',
                 kw_purview:''
             },
             rules: {
@@ -68,7 +68,7 @@ export default {
             }
             if (res.code == 2) {
                 this.$message.error(res.msg);
-                this.$message.error(res.data.error);
+                //this.$message.error(res.data.error);
             }
         },
         //跳转到登录界面

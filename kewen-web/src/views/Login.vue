@@ -33,8 +33,8 @@ export default {
         return {
             captchasrc:'',//验证码图片地址
             loginForm: {
-                kw_stuid: '202010411301',
-                kw_password: '111111',
+                kw_stuid: '',
+                kw_password: '',
                 kw_captcha: ''
             },
             rules: {

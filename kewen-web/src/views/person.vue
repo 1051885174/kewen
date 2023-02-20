@@ -300,9 +300,9 @@ export default {
             tabPosition: 'left',
             //个人信息展示
             kw_name: 'fox',
-            kw_stuid: '0000000',
-            kw_class: '20计科3班',
-            kw_phone: '110',
+            kw_stuid: '',
+            kw_class: '',
+            kw_phone: '',
             kw_message: '',
             kw_purview: '',
             purviewData: [],
